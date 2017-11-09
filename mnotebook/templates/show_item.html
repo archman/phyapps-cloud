@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block container %}
+
+<div class="mybs">
+{% for k, v in item.items()|sort %}
+    <h4>{{ k }}</h4>
+    {% if k == 'server_url' or k == 'uri'  %}
+    <pre><a href={{ v }}>{{ v }}</a></pre>
+    {% else %}
+    <pre>{{ v }}</pre>
+    {% endif %}
+{% endfor %}
+</div>
+
+{% endblock %}

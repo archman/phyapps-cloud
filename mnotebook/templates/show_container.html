@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% set title = 'Container Administration' %}
+{% block container %}
+
+<script src="{{ url_for('static', filename='js/container-admin.js') }}"></script>
+<div class="container-fluid">
+    <div class="mybs">
+        <h3><tt style="color:blue">{{ item.name }}</tt></h3>
+    </div>
+    <div class="mybs">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h1 class="panel-title">Status</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        {% if item.status == 'running' %}
+                        <p class="text-success text-uppercase">{{ item.status }}</p>
+                        {% elif item.status == 'paused' %}
+                        <p class="text-warning text-uppercase">{{ item.status }}</p>
+                        {% elif item.status == 'exited' %}
+                        <p class="text-danger text-uppercase"> {{ item.status }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <button class="btn btn-danger btn-container-ctrl"  data-url="{{ url_for('cid_admin', cid=item.name) }}" data-value="stop"  >Stop  </button>
+                <button class="btn btn-success btn-container-ctrl" data-url="{{ url_for('cid_admin', cid=item.name) }}" data-value="start" >Start </button>
+                <button class="btn btn-warning btn-container-ctrl" data-url="{{ url_for('cid_admin', cid=item.name) }}" data-value="pause" >Pause </button>
+                <button class="btn btn-info btn-container-ctrl"    data-url="{{ url_for('cid_admin', cid=item.name) }}" data-value="resume">Resume</button>
+            </div>
+
+            <div class="panel-heading">
+                <h1 class="panel-title">Image</h1>
+            </div>
+            <div class="panel-body">
+            <i>{{ item.image }}</i>
+            </div>
+
+            <div class="panel-heading">
+                <h1 class="panel-title">ID</h1>
+            </div>
+            <div class="panel-body">
+            <i>{{ item.id }}</i>
+            </div>
+
+            <div class="panel-heading">
+                <h1 class="panel-title">Name</h1>
+            </div>
+            <div class="panel-body">
+            <i>{{ item.name }}</i>
+            </div>
+    </div>
+</div>
+
+{% endblock %}

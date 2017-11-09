@@ -1,0 +1,11 @@
+flask
+flask_restful
+flask_httpauth
+flask-migrate
+flask_sqlalchemy
+tzlocal
+yapf
+pyopenssl
+pymysql
+docker
+passlib
