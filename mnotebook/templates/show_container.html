@@ -2,10 +2,11 @@
 {% set title = 'Container Administration' %}
 {% block container %}
 
-<script src="{{ url_for('static', filename='js/container-admin.js') }}"></script>
+<script src="{{ url_for('static', filename='js/container.js') }}/?004"></script>
+
 <div class="container-fluid">
     <div class="mybs">
-        <h3><tt style="color:blue">{{ item.name }}</tt></h3>
+        <h3><tt style="color:blue">{{ container.name }}</tt></h3>
     </div>
     <div class="mybs">
         <div class="panel panel-default">
@@ -15,43 +16,79 @@
                         <h1 class="panel-title">Status</h1>
                     </div>
                     <div class="col-sm-6">
-                        {% if item.status == 'running' %}
-                        <p class="text-success text-uppercase">{{ item.status }}</p>
-                        {% elif item.status == 'paused' %}
-                        <p class="text-warning text-uppercase">{{ item.status }}</p>
-                        {% elif item.status == 'exited' %}
-                        <p class="text-danger text-uppercase"> {{ item.status }}</p>
+                        {% if container.status == 'running' %}
+                        <p class="text-success text-uppercase">{{ container.status }}</p>
+                        {% elif container.status == 'paused' %}
+                        <p class="text-warning text-uppercase">{{ container.status }}</p>
+                        {% elif container.status == 'exited' %}
+                        <p class="text-danger text-uppercase"> {{ container.status }}</p>
+                        {% else %}
+                        <p class="text-info   text-uppercase"> {{ container.status }}</p>
                         {% endif %}
                     </div>
                 </div>
             </div>
+            {% if session['logged_in_user'] or session['logged_in_admin'] %}
             <div class="panel-body">
-                <button class="btn btn-danger btn-container-ctrl"  data-url="{{ url_for('cid_admin', cid=item.name) }}" data-value="stop"  >Stop  </button>
-                <button class="btn btn-success btn-container-ctrl" data-url="{{ url_for('cid_admin', cid=item.name) }}" data-value="start" >Start </button>
-                <button class="btn btn-warning btn-container-ctrl" data-url="{{ url_for('cid_admin', cid=item.name) }}" data-value="pause" >Pause </button>
-                <button class="btn btn-info btn-container-ctrl"    data-url="{{ url_for('cid_admin', cid=item.name) }}" data-value="resume">Resume</button>
+                <button class="btn btn-danger btn-container-ctrl"  data-url="{{ url_for('container', name=container.name) }}" data-value="stop"   data-status='enabled'>Stop  </button>
+                <button class="btn btn-success btn-container-ctrl" data-url="{{ url_for('container', name=container.name) }}" data-value="start"  data-status='enabled'>Start </button>
+                <button class="btn btn-warning btn-container-ctrl" data-url="{{ url_for('container', name=container.name) }}" data-value="pause"  data-status='enabled'>Pause </button>
+                <button class="btn btn-info btn-container-ctrl"    data-url="{{ url_for('container', name=container.name) }}" data-value="resume" data-status='enabled'>Resume</button>
+            </div>
+            {% else %}
+            <div class="panel-body">
+                <button class="btn btn-danger disabled btn-container-ctrl"  data-url="{{ url_for('container', name=container.name) }}" data-value="stop"   data-status='disabled'>Stop  </button>
+                <button class="btn btn-success disabled btn-container-ctrl" data-url="{{ url_for('container', name=container.name) }}" data-value="start"  data-status='disabled'>Start </button>
+                <button class="btn btn-warning disabled btn-container-ctrl" data-url="{{ url_for('container', name=container.name) }}" data-value="pause"  data-status='disabled'>Pause </button>
+                <button class="btn btn-info disabled btn-container-ctrl"    data-url="{{ url_for('container', name=container.name) }}" data-value="resume" data-status='disabled'>Resume</button>
+            </div>
+            {% endif %}
+
+            <div class="panel-heading">
+                <h1 class="panel-title">Owner</h1>
+            </div>
+            <div class="panel-body">
+                <p class="text-info"><a href="{{ url_for('user', name=container.owner) }}">{{ container.owner }}</a></p>
             </div>
 
             <div class="panel-heading">
                 <h1 class="panel-title">Image</h1>
             </div>
             <div class="panel-body">
-            <i>{{ item.image }}</i>
+                <p class="text-default">{{ container.image }}</p>
             </div>
 
             <div class="panel-heading">
                 <h1 class="panel-title">ID</h1>
             </div>
             <div class="panel-body">
-            <i>{{ item.id }}</i>
+                <p class="text-defalut">{{ container.longid }}</p>
             </div>
 
             <div class="panel-heading">
-                <h1 class="panel-title">Name</h1>
+                <h1 class="panel-title">Uptime</h1>
             </div>
             <div class="panel-body">
-            <i>{{ item.name }}</i>
+                <p class="text-default">{{ container.uptime }}</p>
             </div>
+
+            <div class="panel-heading">
+                <h1 class="panel-title">Ports</h1>
+            </div>
+            <div class="panel-body">
+                <p class="text-default">{{ container.ports }}</p>
+            </div>
+
+            {% if container.notebook_url != 'Unknown' %}
+            <div class="panel-heading">
+                <h1 class="panel-title">Notebook URL</h1>
+            </div>
+            <div class="panel-body">
+                <p class="text-default"><a href="{{ container.notebook_url }}">{{ container.notebook_url }}</a></p>
+            </div>
+            {% endif %}
+
+
     </div>
 </div>
 

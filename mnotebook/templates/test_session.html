@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block container %}
+
+{% if session['logged_in'] %}
+<p>Logged in</p>
+{% else %}
+<p>Unauthorized</p>
+{% endif %}
+
+{% endblock %}

@@ -4,11 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>{{ title }}</title>
-        <!--
-        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/default.css') }}">
-        <script src="{{ url_for('static', filename='highlight.pack.js')}}"></script>
-        <script>hljs.initHighlightingOnLoad();</script>
-        -->
+
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-3.3.7/css/bootstrap.min.css') }}">
         <style type="text/css">
             .mybs{
@@ -17,6 +13,7 @@
         </style>
         <script src="{{ url_for('static', filename='bootstrap-3.3.7/js/jquery-3.2.1.min.js') }}"></script>
         <script src="{{ url_for('static', filename='bootstrap-3.3.7/js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/logout.js') }}"></script>
     </head>
     </body>
         <div class="mybs">
@@ -34,10 +31,20 @@
                     <ul class="nav navbar-nav">
                         <li><a href="/">Home</a></li>
                         <li><a href={{ url_for('users') }}>Activity</a></li>
+                        {% if session['logged_in_admin'] %}
                         <li><a href={{ url_for('u_admin') }}>Admin</a></li>
+                        {% endif %}
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+                        {% if session['logged_in'] %}
+                        <li><a href="{{ url_for('user', name=session['logged_in_user']) }}"><span class="label label-info">{{ session['logged_in_user'] }}</span></a><li>
+                        <li><a href='#' data-url="{{ url_for('u_login') }}" class="nav-logout">Logout</a></li>
+                        {% elif session['logged_in_admin'] %}
+                        <li><a href="{{ url_for('u_admin') }}"><span class="label label-danger">{{ session['logged_in_admin'] }}</span></a></li>
+                        <li><a href='#' data-url="{{ url_for('u_login') }}" class="nav-logout">Logout</a></li>
+                        {% else %}
                         <li><a href={{ url_for('u_login') }}>Login</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </nav>

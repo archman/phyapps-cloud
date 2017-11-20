@@ -41,9 +41,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for item in items %}
+                    {% for user in users %}
                     <tr>
-                        <td><a href={{ item.uri }}><strong>{{ item.name }}</strong></a></td>
+                        {% if session['logged_in_user'] == user.name %}
+                        <td><a href={{ user.uri }}><strong>{{ user.name }}</strong></a></td>
+                        {% else %}
+                        <td><strong>{{ user.name }}</strong></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                     </tbody>
@@ -56,28 +60,28 @@
                     <thead>
                     <tr>
                         <th>Description</th>
-                        <th>Server URL</th>
+                        <th>Notebook URL</th>
                         <th>Container Name</th>
                         <th>Status</th>
                         <th>Last Updated</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for item in items %}
+                    {% for user in users %}
                     <tr>
-                        <td>{{ item.description }}</td>
-                        {% if item.server_url %}
-                        <td><a href={{ item.server_url }}>{{ item.server_url }}</a></td>
+                        <td>{{ user.description }}</td>
+                        {% if user.notebook_url != 'Unknown' %}
+                        <td><a href={{ user.notebook_url }}>{{ user.notebook_url }}</a></td>
                         {% else %}
-                        <td>{{ item.server_url }}</td>
+                        <td>{{ user.notebook_url }}</td>
                         {% endif %}
-                        {% if item.container_name %}
-                        <td><a href={{ url_for('cid_admin', cid=item.container_name) }}><tt>{{ item.container_name }}</tt></a></td>
+                        {% if user.container_name %}
+                        <td><a href={{ url_for('container', name=user.container_name) }}><tt>{{ user.container_name }}</tt></a></td>
                         {% else %}
-                        <td><tt>{{ item.container_name }}</tt></td>
+                        <td><tt>{{ user.container_name }}</tt></td>
                         {% endif %}
-                        <td>{{ item.container_status }}</td>
-                        <td><tt>{{ item.timestamp }}</tt></td>
+                        <td>{{ user.container_status }}</td>
+                        <td><tt>{{ user.timestamp }}</tt></td>
                     </tr>
                     {% endfor %}
                     </tbody>

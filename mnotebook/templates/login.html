@@ -1,33 +1,40 @@
 {% extends "base.html" %}
 {% set title = "User Login Panel" %}
 {% block container %}
-<div class="mybs">
-    <form class="form-horizontal" action="" method="post">
-        <div class="form-group">
-            <label for="inputUser" class="control-label col-xs-2">Username</label>
-            <div class="col-xs-10">
-                <input type="text" class="form-control" id="inputUser" name='username' placeholder="Username" required>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="inputPassword" class="control-label col-xs-2">Password</label>
-            <div class="col-xs-10">
-                <input type="password" class="form-control" id="inputPassword" name='password' placeholder="Password" required>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-xs-offset-2 col-xs-10">
-                <div class="checkbox">
-                    <label><input type="checkbox"> Remember me</label>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-xs-offset-2 col-xs-10">
-                <button type="submit" class="btn btn-primary" name="register" value="login">Login</button>
-                <button type="submit" class="btn btn-primary" name="register" value="signup">Sign Up</button>
-            </div>
-        </div>
-    </form>
+
+<style type="text/css">
+    .bs{
+        padding: 40px;
+        margin: auto;
+    }
+</style>
+
+<script src="{{ url_for('static', filename='js/login.js') }}/?017"></script>
+
+<div class="col-sm-4 col-sm-offset-4 col-xs-6 col-xs-offset-3">
+    <div class="row form-group input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+        <input type="text" class="form-control" id="inputUsername" placeholder="Username" autocomplete=off>
+    </div>
+    <div class="row form-group input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+        <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+    </div>
+    <div class="row form-group checkbox">
+        <label><input type="checkbox" id="check-admin">Login as Administrator</label>
+    </div>
+    <div class="row form-group">
+        <button class="btn btn-success btn-login-login"
+                data-op="login"
+                data-url="{{ url_for('u_login') }}"
+                data-surl="{{ url_for('users') }}">Login
+        </button>
+        <button class="btn btn-info btn-login-signup"
+                data-op="signup"
+                data-url="{{ url_for('users') }}"
+                data-surl="{{ url_for('users') }}">Sign Up
+        </button>
+    </div>
 </div>
+
 {% endblock %}
