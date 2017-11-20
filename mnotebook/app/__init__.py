@@ -16,12 +16,12 @@ app = Flask(__name__,
             template_folder=template_dir,
             static_folder=static_dir)
 app.config.from_object('config')
+app.secret_key = os.urandom(20)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 api = Api(app)
-
 
 from .views import UserAPI
 from .views import UserListAPI
@@ -42,9 +42,13 @@ api.add_resource(UserAPI, '/users/<string:name>',
                  endpoint='user')
 api.add_resource(UserListAPI, '/users',
                  endpoint='users')
-api.add_resource(ContainerAdminAPI, '/containers/<string:cid>',
-                 endpoint='cid_admin')
+api.add_resource(ContainerAdminAPI, '/containers/<string:name>',
+                 endpoint='container')
 api.add_resource(UserAdminAPI, '/users/admin',
                  endpoint='u_admin')
 api.add_resource(UserLoginAPI, '/users/login',
                  endpoint='u_login')
+
+# session:
+# logged_in [bool] 
+# logged_in_user [string], logged_in_admin [string]
