@@ -8,10 +8,14 @@ from flask_restful import Resource
 from flask_restful import marshal
 from flask_restful import reqparse
 
-from ..models import Admin, User
+from ..models import Admin
+from ..models import User
+from ..models import Container
 from ..models import db
 from ..auth import auth
-from .user import user_fields
+from ..fields import user_fields
+from ..fields import admin_fields
+from ..fields import container_fields
 
 
 class UserAdminAPI(Resource):
@@ -26,16 +30,19 @@ class UserAdminAPI(Resource):
     def get(self):
         users = User.query.all()
         admins = Admin.query.all()
+        containers = Container.query.all()
+        # debug
+        from flask import session
+        print(session)
+        #
         #if request_json():
         #    return {'users': [marshal(u, user_fields) for u in users]}
         return Response(
                     render_template('show_admin.html',
                         users=[marshal(u, user_fields) for u in users],
-                        admins=admins),
+                        containers=[marshal(c, container_fields) for c in containers],
+                        admins=[marshal(u, admin_fields) for u in admins]),
                         mimetype='text/html')
-        #return Response(
-        #        render_template('admin.html',),
-        #        mimetype="text/html")
 
     def put(self):
         p = self.rp.parse_args()
@@ -49,7 +56,7 @@ class UserAdminAPI(Resource):
         admin = Admin.query.filter(Admin.nickname==nickname).first()
 
         if password not in [None, '']:
-            admin.hash_passwd(password)
+            admin.hash_password(password)
         if email not in [None, '']:
             admin.email = email
         db.session.commit()
@@ -68,7 +75,7 @@ class UserAdminAPI(Resource):
             abort(400)
 
         new_admin = Admin(nickname=nickname, email=email)
-        new_admin.hash_passwd(password)
+        new_admin.hash_password(password)
         db.session.add(new_admin)
         db.session.commit()
         return {'Admin account': new_admin.nickname}, 201
