@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 from datetime import datetime
 
 from passlib.apps import custom_app_context as pwd_context
@@ -8,6 +9,12 @@ from . import db
 from .utils import utc2local
 from .utils import get_container_status
 from .utils import get_container_name
+from .utils import get_container_image
+from .utils import get_container_ports
+from .utils import get_container_ctime
+from .utils import get_container_uptime
+from .utils import get_container_shortid
+from .utils import get_container_url
 
 
 class Admin(db.Model):
@@ -37,14 +44,18 @@ class Admin(db.Model):
             return unicode(self.id)
         except NameError:
             return str(self.id)
-    
+
+    @property
+    def local_time(self):
+        return utc2local(self.timestamp)
+
     def __repr__(self):
         return "<User '{}'>".format(self.nickname)
 
-    def hash_passwd(self, passwd):
+    def hash_password(self, passwd):
         self.password_hash = pwd_context.encrypt(passwd)
 
-    def verify_passwd(self, passwd):
+    def verify_password(self, passwd):
         return pwd_context.verify(passwd, self.password_hash)
 
 
@@ -57,32 +68,94 @@ class User(db.Model):
     admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'))
     description = db.Column(db.String(100))
 
-    container_id = db.Column(db.String(100))
-    server_url = db.Column(db.String(100))
     password_hash = db.Column(db.String(128))
+    containers = db.relationship('Container', backref='user', lazy='dynamic')
 
-    def container_name(self):
-        return get_container_name(self.container_id)
-
+    @property
     def local_time(self):
         return utc2local(self.timestamp)
 
-    def admin_name(self):
-        return Admin.query.filter().first().nickname
+    @property
+    def container_name(self):
+        try:
+            return self.containers[0].name
+        except IndexError:
+            return "Unknown"
 
+    @property
     def container_status(self):
-        return get_container_status(self.container_id)
-    
+        try:
+            return self.containers[0].status
+        except IndexError:
+            return "Unknown"
+
+    @property
+    def notebook_url(self):
+        try:
+            return self.containers[0].notebook_url
+        except:
+            return "Unknown"
+
     def __repr__(self):
         return "<User '{}'>".format(self.name)
 
+    def hash_password(self, pw):
+        self.password_hash = pwd_context.encrypt(pw)
+
+    def verify_password(self, passwd):
+        return pwd_context.verify(passwd, self.password_hash)
+
+    # 
     @property
     def is_authenticated(self):
         return True
 
-    def hash_passwd(self, passwd):
-        self.passwd_hash = pwd_context.encrypt(passwd)
 
-    def verify_passwd(self, passwd):
-        return pwd_context.verify(passwd, self.passwd_hash)
+class Container(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cid = db.Column(db.String(128), index=True, unique=True)
+    # last update ts
+    timestamp = db.Column(db.DateTime,
+                          default=datetime.utcnow,
+                          onupdate=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+
+    def __repr__(self):
+        return "<Container '{}'>".format(self.name)
+    
+    @property
+    def name(self):
+        return get_container_name(self.cid)
+    
+    @property
+    def shortid(self):
+        return get_container_shortid(self.cid)
+
+    @property
+    def status(self):
+        return get_container_status(self.cid)
+
+    @property
+    def image(self):
+        return get_container_image(self.cid).tags[0]
+
+    @property
+    def ports(self):
+        return get_container_ports(self.cid)
+
+    @property
+    def ctime(self):
+        return get_container_ctime(self.cid)
+
+    @property
+    def uptime(self):
+        return get_container_uptime(self.cid)
+
+    @property
+    def local_time(self):
+        return utc2local(self.timestamp)
+
+    @property
+    def notebook_url(self):
+        return get_container_url(self.cid, 8888)
