@@ -3,11 +3,13 @@
 from flask import render_template
 from flask import Response
 from flask import request
+from flask import session
 from flask import abort
 from flask_restful import Resource
 from flask_restful import marshal
 
 from ..models import User
+from ..models import Admin
 from ..models import db
 from .user import user_fields
 from ..utils import request_json
@@ -22,40 +24,68 @@ class UserLoginAPI(Resource):
                 render_template('login.html',),
                 mimetype="text/html")
 
+    def put(self):
+        # change login status
+        print(session)
+        if 'logged_in_admin' in session and session['logged_in_admin']:
+            session['logged_in_admin'] = None
+        else:
+            session['logged_in'] = False
+            session['logged_in_user'] = None
+        #debug
+        print(session)
+        return {'logout': True}, 200
+
     def post(self):
-        form_input = request.form
+        # just do login authentication
+        # signup --> users/post
+        form_input = request.get_json()
+        # debug
+        print(form_input)
         username = form_input.get('username')
         password = form_input.get('password')
+
         if username is None or password is None:
             abort(400)
 
-        reg = form_input.get('register')
-        if reg == 'login':
-            user = User.query.filter(User.name==username).first()
+        as_admin = form_input.get('check_admin');
+        op = form_input.get('op')
+        if op == 'login':
+            if as_admin:
+                user = Admin.query.filter(Admin.nickname==username).first()
+            else:
+                user = User.query.filter(User.name==username).first()
+
             if user is None:
                 abort(404)
-                
-            # authenticate user info
-            print(user.is_authenticated)
-            #if user.is_authenticated:
-            #    return Response(
-            #            render_template(),
-            #            mimetype='text/html')
-            #else:
-            #    abort(401)
-        elif reg == 'signup':
+
+            if user.verify_password(password):
+                if as_admin:
+                    session['logged_in_admin'] = user.nickname
+                    # debug
+                    print(session)
+                    return {'logged_in_admin': user.nickname}, 200 
+                else:
+                    session['logged_in'] = True
+                    session['logged_in_user'] = user.name
+                    # debug
+                    print(session)
+                    return {'logged_in_user': user.name}, 200 
+            else:
+                # debug
+                print(session)
+                abort(401)
+        elif op == 'signup':
+            if as_admin:
+                abort(400)
+
             if User.query.filter(User.name==username).first() is not None:
                 abort(400)
             # register new user
             user = User(name=username)
-            user.hash_passwd(password)
+            user.hash_password(password)
             db.session.add(user)
             db.session.commit()
-            if request_json():
-                return {'User account': user.name}, 201
-            return Response(
-                    render_template('show_item.html',
-                        item=marshal(user, user_fields)),
-                    mimetype='text/html')
-        
-
+            session['logged_in'] = True
+            session['logged_in_user'] = username
+            return {'User account': user.name}, 201
