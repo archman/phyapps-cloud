@@ -28,6 +28,7 @@ server:
 
 clean:
 	find . -iname '*.pyc' -exec rm {} \;
+	docker rm $(docker ps -q -f "status=created")
 
 #1
 init_db:
@@ -36,7 +37,8 @@ init_db:
 		rm -rf app.db migrations && \
 		flask db init && \
 		flask db migrate && \
-		flask db upgrade
+		flask db upgrade && \
+		./db-scripts/init_admin.py
 
 #1.1
 restore_db:
