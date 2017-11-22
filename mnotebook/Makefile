@@ -9,6 +9,11 @@ SHELL := /bin/bash
 
 ENV_PATH = $(HOME)/mnb-env
 
+#PROXY_TOKEN = $(PROXY_TOKEN)
+
+PROXY_TOKEN = '0b20cdf3c951d25936d27fc4405eb23e2e29790b00'
+PROXY_BASE = 'http://127.0.0.1:8001/api/routes'
+
 env:
 	virtualenv $(ENV_PATH)
 
@@ -18,6 +23,8 @@ env_pkg:
 
 run:
 	source $(ENV_PATH)/bin/activate && \
+		PROXY_TOKEN=$(PROXY_TOKEN) \
+		PROXY_BASE=$(PROXY_BASE) \
 		./run.py
 
 server:
