@@ -2,7 +2,7 @@
 {% set title = 'Container Administration' %}
 {% block container %}
 
-<script src="{{ url_for('static', filename='js/container.js') }}/?004"></script>
+<script src="{{ url_for('static', filename='js/container.js') }}"></script>
 
 <div class="container-fluid">
     <div class="mybs">
@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </div>
-            {% if session['logged_in_user'] or session['logged_in_admin'] %}
+            {% if session['logged_in_user'] == container.owner or session['logged_in_admin'] %}
             <div class="panel-body">
                 <button class="btn btn-danger btn-container-ctrl"  data-url="{{ url_for('container', name=container.name) }}" data-value="stop"   data-status='enabled'>Stop  </button>
                 <button class="btn btn-success btn-container-ctrl" data-url="{{ url_for('container', name=container.name) }}" data-value="start"  data-status='enabled'>Start </button>
@@ -81,7 +81,7 @@
 
             {% if container.notebook_url != 'Unknown' %}
             <div class="panel-heading">
-                <h1 class="panel-title">Notebook URL</h1>
+                <h1 class="panel-title">Notebook URL (API)</h1>
             </div>
             <div class="panel-body">
                 <p class="text-default"><a href="{{ container.notebook_url }}">{{ container.notebook_url }}</a></p>

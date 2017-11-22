@@ -1,100 +1,11 @@
 {% extends "base.html" %}
 {% block container %}
 
-<script src="{{ url_for('static', filename='js/user.js') }}?ver=001"></script>
+<script src="{{ url_for('static', filename='js/user.js') }}"></script>
 
 <script>
 $(function() {
     $('[data-toggle="tooltip"]').tooltip();
-});
-</script>
-
-<script>
-$(function() {
-    // edit service (container)
-    $(".btn-edit-container").click(function() {
-        var curl  = $(this).data('curl');
-        var cid   = $(this).data('cid');
-        var cname = $(this).data('cname');
-        var uname = $(this).data('uname');
-
-        console.log("curl:", curl);
-        console.log("cid:", cid);
-        console.log("cname:", cname);
-        console.log("uname:", uname);
-
-        $(".modal-body #uname").val(uname);
-        $(".modal-body #cid").val(cid);
-        $(".modal-body #cname").val(cname);
-        $(".modal-body #server_url").val(curl);
-    });
-    
-//    $('.selectpicker').on('changed.bs.select', function (e) {
-//            var selected = e.target.value;
-//            console.log(selected);
-//    });
-
-    $(".btn-start-service").click(function(e) {
-        e.preventDefault();
-        var uname  = $("#uname").val();
-        var cimage = $("#clist").val();
-        var csect  = $("#csect").val();
-        var url    = $(this).data('url');
-        var data   = {'image': cimage, 'mach': csect, 'uname': uname};
-
-        console.log("uname:", uname);
-        console.log("cimage:", cimage);
-        console.log("section:", csect);
-        console.log("url:", url);
-        console.log(JSON.stringify(data));
-
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: JSON.stringify(data),
-            contentType: "application/json; charset=utf-8",
-            success: function(data) {
-                //console.log(data);
-                $(".modal-body #cid").val(data['id']);
-                $(".modal-body #cname").val(data['name']);
-
-                // update user via submit btn.
-                // add reset container button, along as start.
-
-                $(".modal-body #server_url").val(data['nb_url']);
-                alert("New service created");
-            },
-            error: function() {
-                alert("Failed to create new service!");
-            }
-        });
-    });
-
-    // submit update container
-    $(".submit-update-container").click(function() {
-        var url  = $(".btn-edit-container").data('url');
-        var curl = $(".modal-body #server_url").val();
-        var cname  = $(".modal-body #cname").val();
-        var data = {'container_name': cname, 'server_url': curl};
-        
-        console.log(JSON.stringify(data));
-        console.log(url)
-
-        $.ajax({
-            type: "PUT",
-            url: url,
-            data: JSON.stringify(data),
-            contentType: "application/json; charset=utf-8",
-            success: function() {
-                alert("User's service updated");
-                location.reload();
-            },
-            error: function() {
-                alert("Not update user's service");
-            }
-        });
-    });
-
 });
 </script>
 
@@ -110,11 +21,11 @@ $(function() {
                                 data-title="Update User" 
                                 data-target="#update-user-modal"
                                 data-uname="{{ user.name }}"
-                                data-cid="{{ user.container_id }}"
+                                data-cname="{{ user.container_name }}"
                                 data-curl="{{ user.notebook_url }}"
                                 data-desc="{{ user.description }}"
-                                data-url="{{ url_for('user', name=user.name) }}"
-                                data-password="{{ user.password_hash }}"><i class="glyphicon glyphicon-wrench"></i>
+                                data-url="{{ url_for('user', name=user.name) }}">
+                            <i class="glyphicon glyphicon-wrench"></i>
                         </button>
                     </span>
                     <span title="Edit Service" data-toggle="tooltip">
@@ -138,8 +49,8 @@ $(function() {
         <div class="panel-body">
             {% for k, v in user.items()|sort if k != 'password_hash' %}
 
-            <p><strong>{{ k }}</strong></p>
-            {% if k == 'notebook_url' or k == 'uri'  %}
+            <p class="text-uppercase"><strong>{{ k }}</strong></p>
+            {% if k == 'notebook_url' and v != 'Unknown' or k == 'uri'  %}
             <p><a href={{ v }}>{{ v }}</a></p>
             {% elif k == 'container_name' and v != 'Unknown'%}
             <p><a href={{ url_for('container', name=v) }}>{{ v }}</a></p>
@@ -153,7 +64,7 @@ $(function() {
     </div>
 </div>
 
-{% include 'update-user-modal.html' %}
-{% include 'update-container-modal.html' %}
+{% include 'update_user_modal.html' %}
+{% include 'update_container_modal.html' %}
 
 {% endblock %}

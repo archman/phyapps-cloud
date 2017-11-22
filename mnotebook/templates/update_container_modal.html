@@ -1,7 +1,5 @@
-
 <link rel="stylesheet" href={{ url_for("static", filename="css/bootstrap-select.min.css") }}>
 <script src={{ url_for("static", filename="js/bootstrap-select.min.js")}}></script>
-
 
 <div id="update-container-modal" class="modal">
     <div class="modal-dialog">
@@ -23,21 +21,21 @@
                     <div class="form-group">
                         <label for="cname" class="control-label col-xs-3">Container Name</label>
                         <div class="col-xs-9">
-                            <input type="text" class="form-control" id="cname">
+                            <input type="text" class="form-control" id="cname" readonly>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="cid" class="control-label col-xs-3">Container ID</label>
                         <div class="col-xs-9">
-                           <input type="text" class="form-control" id="cid">
+                           <input type="text" class="form-control" id="cid" readonly>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="server_url" class="control-label col-xs-3">Server URL</label>
+                        <label for="notebook_url" class="control-label col-xs-3">Notebook URL</label>
                         <div class="col-xs-9">
-                            <input type="text" class="form-control" id="server_url">
+                            <input type="text" class="form-control" id="notebook_url" readonly>
                         </div>
                     </div>
 
@@ -50,8 +48,8 @@
                             <label class="control-label">Service</label>
                             <div class="form-group" style="padding-left:13px;margin-right:10px;">
                                 <select name="clist" class="form-control selectpicker" title="" id="clist">
-                                    <option value="phyapps:1.5-ss" select="selected">phyapps-1.5-ss</option>
-                                    <option value="phyapps:1.5">phyapps-1.5</option>
+                                    <option value="phyapps:1.6-ss" select="selected">phyapps-1.6-ss</option>
+                                    <option value="phyapps:1.6">phyapps-1.6</option>
                                 </select>
                             </div>
                         </div>

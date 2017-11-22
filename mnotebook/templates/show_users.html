@@ -23,6 +23,8 @@
     }
 </style>
 
+<script src="{{ url_for('static', filename='js/nb.js') }}"></script>
+
 <div class="mybs">
     <div class="row">
         <div class="col-sm-12">
@@ -70,12 +72,12 @@
                     {% for user in users %}
                     <tr>
                         <td>{{ user.description }}</td>
-                        {% if user.notebook_url != 'Unknown' %}
-                        <td><a href={{ user.notebook_url }}>{{ user.notebook_url }}</a></td>
+                        {% if user.notebook_url != 'Unknown' and session['logged_in_user'] == user.name or session['logged_in_admin'] %}
+                        <td><a class="nblink" data-token="{{ user.password_hash }}" href={{ user.notebook_url }}>{{ user.notebook_url }}</a></td>
                         {% else %}
                         <td>{{ user.notebook_url }}</td>
                         {% endif %}
-                        {% if user.container_name %}
+                        {% if user.container_name != 'Unknown' %}
                         <td><a href={{ url_for('container', name=user.container_name) }}><tt>{{ user.container_name }}</tt></a></td>
                         {% else %}
                         <td><tt>{{ user.container_name }}</tt></td>
