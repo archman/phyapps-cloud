@@ -63,7 +63,7 @@
                     <tr>
                         <th>Description</th>
                         <th>Notebook URL</th>
-                        <th>Container Name</th>
+                        <th>Service Name</th>
                         <th>Status</th>
                         <th>Last Updated</th>
                     </tr>
@@ -82,7 +82,13 @@
                         {% else %}
                         <td><tt>{{ user.container_name }}</tt></td>
                         {% endif %}
-                        <td>{{ user.container_status }}</td>
+                        {% if user.container_status == 'running' %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-success text-uppercase">{{ user.container_status }}</span></td>
+                        {% elif user.container_status == 'exited' %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-danger text-uppercase">{{ user.container_status }}</span></td>
+                        {% elif user.container_status == 'paused' %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-warning text-uppercase">{{ user.container_status }}</span></td>
+                        {% endif %}
                         <td><tt>{{ user.timestamp }}</tt></td>
                     </tr>
                     {% endfor %}
