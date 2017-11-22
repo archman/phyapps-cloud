@@ -31,9 +31,6 @@ class UserAdminAPI(Resource):
         users = User.query.all()
         admins = Admin.query.all()
         containers = Container.query.all()
-        # debug
-        from flask import session
-        print(session)
         #
         #if request_json():
         #    return {'users': [marshal(u, user_fields) for u in users]}

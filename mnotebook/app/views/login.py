@@ -26,22 +26,18 @@ class UserLoginAPI(Resource):
 
     def put(self):
         # change login status
-        print(session)
         if 'logged_in_admin' in session and session['logged_in_admin']:
             session['logged_in_admin'] = None
         else:
             session['logged_in'] = False
             session['logged_in_user'] = None
-        #debug
-        print(session)
         return {'logout': True}, 200
 
     def post(self):
         # just do login authentication
         # signup --> users/post
         form_input = request.get_json()
-        # debug
-        print(form_input)
+
         username = form_input.get('username')
         password = form_input.get('password')
 
@@ -62,30 +58,23 @@ class UserLoginAPI(Resource):
             if user.verify_password(password):
                 if as_admin:
                     session['logged_in_admin'] = user.nickname
-                    # debug
-                    print(session)
                     return {'logged_in_admin': user.nickname}, 200 
                 else:
                     session['logged_in'] = True
                     session['logged_in_user'] = user.name
-                    # debug
-                    print(session)
                     return {'logged_in_user': user.name}, 200 
             else:
-                # debug
-                print(session)
                 abort(401)
         elif op == 'signup':
-            if as_admin:
-                abort(400)
 
-            if User.query.filter(User.name==username).first() is not None:
-                abort(400)
+            #if User.query.filter(User.name==username).first() is not None:
+            #    abort(400)
+
             # register new user
-            user = User(name=username)
-            user.hash_password(password)
-            db.session.add(user)
-            db.session.commit()
-            session['logged_in'] = True
-            session['logged_in_user'] = username
+            #user = User(name=username)
+            #user.hash_password(password)
+            #db.session.add(user)
+            #db.session.commit()
+            #session['logged_in'] = True
+            #session['logged_in_user'] = username
             return {'User account': user.name}, 201
