@@ -3,8 +3,6 @@
 from flask import abort
 from flask import request
 from flask import Response
-from flask import redirect
-from flask import url_for
 from flask import render_template
 from flask_restful import Resource
 from flask_restful import fields
@@ -35,9 +33,6 @@ class ContainerAdminAPI(Resource):
         if not container:
             abort(404)
 
-        #debug
-        print marshal(container, container_fields)
-
         if request_json():
             return {'container': marshal(container, container_fields)}
         return Response(
@@ -49,17 +44,17 @@ class ContainerAdminAPI(Resource):
         # new
         data = request.get_json()
         try:
-            new_cid, new_cname, new_url1, new_url2 = \
-                create_new_container({k:v for k,v in data.items() if k not in ('uname')})
-            new_container = Container(cid=new_cid)
             u = User.query.filter(User.name==data['uname']).first()
-            print(u)
-            print(new_container)
+            new_cid, new_cname, new_url1, new_url2 = \
+                create_new_container(user=u, **data)
+            new_container = Container(cid=new_cid)
+
             if u is None:
                 abort(404)
             new_container.user = u
             db.session.add(new_container)
             db.session.commit()
+
             return {'id': new_cid, 'name': new_cname, 'nb_url': new_url1, 'ss_url': new_url2}, 201
         except:
             return {'id': None, 'name': 'Unknown', 'nb_url': None, 'ss_url': None}, 501

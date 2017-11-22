@@ -10,10 +10,13 @@ from flask_restful import fields
 from flask_restful import marshal
 from flask_restful import reqparse
 
-from ..models import User, Admin
+from ..models import User
+from ..models import Admin
+from ..models import Container
 from ..models import db
 from ..auth import auth
 from ..utils import request_json
+from ..utils import validate_container
 from ..fields import user_fields
 
 
@@ -24,7 +27,6 @@ class UserAPI(Resource):
         self.rp.add_argument('name', type=str, location='json')
         self.rp.add_argument('password', type=str, location='json')
         self.rp.add_argument('description', type=str, location='json')
-        self.rp.add_argument('container_id', type=str, location='json')
         self.rp.add_argument('container_name', type=str, location='json')
         self.rp.add_argument('server_url', type=str, location='json')
         super(UserAPI, self).__init__()
@@ -44,19 +46,44 @@ class UserAPI(Resource):
     
     #@auth.login_required
     def put(self, name):
+        # update user configuration.
+        # name, password, description
         # todo: handle admin?
         user = User.query.filter(User.name==name).first()
         if user is None:
             abort(404)
         args = self.rp.parse_args()
         for k, v in args.items():
-            if k == 'password' and v not in [None, '']:
+            if k == 'container_name':
+                self._update_container(user, v)
+            elif k == 'password' and v not in [None, '']:
                 user.hash_password(v)
-            if v is not None:
+            elif v is not None:
                 setattr(user, k, v)
 
         db.session.commit()
         return {'user': marshal(user, user_fields)}
+    
+    def _update_container(self, user, cname):
+        """Update container for user.
+        """
+        cid, c = validate_container(cname)
+        new_c = Container.query.filter_by(cid=cid).first()
+        if c is not None:
+            try:
+                for idx, ic in enumerate(user.containers[:-1]):
+                    try:
+                        print('removing', ic)
+                        db.session.delete(ic)
+                        ic.get_container().stop()
+                        ic.get_container().remove()
+                    except:
+                        print(ic)
+                db.session.commit()
+            except:
+                print("stop container")
+            user.containers[-1].get_container().start()
+            print('update with new container')
 
     #@auth.login_required
     def delete(self, name):
@@ -106,7 +133,7 @@ class UserListAPI(Resource):
         else:
             if 'logged_in_admin' in session:
                 admin_name = session['logged_in_admin']
-                admin = Admin.query.filter_by(nickname==admin_name).first()
+                admin = Admin.query.filter_by(nickname=admin_name).first()
             else:
                 admin = Admin.query.filter_by(id=1).first()
                 
@@ -117,4 +144,6 @@ class UserListAPI(Resource):
             new_u.hash_password(user.get('password'))
             db.session.add(new_u)
             db.session.commit()
+            session['logged_in_user'] = username
+            session['logged_in'] = True
             return {'user': marshal(new_u, user_fields)}, 201
