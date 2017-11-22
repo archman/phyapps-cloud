@@ -14,7 +14,7 @@ container_fields = {
     'ports': fields.String,
     'timestamp': fields.String(attribute='local_time'),
     'owner': fields.String(attribute=lambda x:x.user.name),
-    'notebook_url': fields.String(attribute='notebook_proxy_url')
+    'notebook_url': fields.String(attribute='notebook_url')
 }
 
 

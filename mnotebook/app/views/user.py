@@ -18,6 +18,7 @@ from ..auth import auth
 from ..utils import request_json
 from ..utils import validate_container
 from ..fields import user_fields
+from ..proxy import update_proxy
 
 
 class UserAPI(Resource):
@@ -83,6 +84,8 @@ class UserAPI(Resource):
             except:
                 print("stop container")
             user.containers[-1].get_container().start()
+            # update proxy rule
+            update_proxy(user.name, new_c.notebook_url)
             print('update with new container')
 
     #@auth.login_required

@@ -18,7 +18,6 @@ from .utils import get_container_uptime
 from .utils import get_container_shortid
 from .utils import get_container_url
 from .utils import validate_container
-from .proxy import new_proxy
 
 
 class Admin(db.Model):
@@ -102,10 +101,6 @@ class User(db.Model):
 
     @property
     def notebook_url(self):
-        #try:
-        #    return self.containers[-1].notebook_url
-        #except:
-        #    return "Unknown"
         return url_for('proxy_nb', name=self.name)
 
     def __repr__(self):
@@ -172,10 +167,5 @@ class Container(db.Model):
     def notebook_url(self):
         return get_container_url(self.cid, 8888)
 
-    @property
-    def notebook_proxy_url(self):
-        return new_proxy(self.user.name, self.notebook_url)
-
     def get_container(self):
         return get_container(self.cid)
-

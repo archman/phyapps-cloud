@@ -4,7 +4,7 @@ import requests
 import os
 
 
-def new_proxy(uname, target_url, url=None, token=None):
+def update_proxy(uname, target_url, url=None, token=None):
     """post new proxy rule.
 
     Parameters
@@ -50,3 +50,17 @@ def new_proxy(uname, target_url, url=None, token=None):
         return r.url
     else:
         return None
+
+
+def get_proxy():
+    token = '0b20cdf3c951d25936d27fc4405eb23e2e29790b00'
+    r = requests.get("http://127.0.0.1:8001/api/routes",
+            headers={'Authorization': 'token {}'.format(token)},
+        )
+    d = r.json()
+    print(d.keys())
+    print(d['/user1'])
+
+
+if __name__ == '__main__':
+    get_proxy()

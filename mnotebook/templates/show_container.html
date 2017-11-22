@@ -48,7 +48,11 @@
                 <h1 class="panel-title">Owner</h1>
             </div>
             <div class="panel-body">
+                {% if session['logged_in_user'] == container.owner %}
                 <p class="text-info"><a href="{{ url_for('user', name=container.owner) }}">{{ container.owner }}</a></p>
+                {% else %}
+                <p class="text-info">{{ container.owner }}</p>
+                {% endif %}
             </div>
 
             <div class="panel-heading">
