@@ -29,13 +29,21 @@ from .views import ContainerAdminAPI
 from .views import UserAdminAPI
 from .views import UserLoginAPI
 
-from flask import Response, render_template
+from flask import Response
+from flask import render_template
+from flask import redirect
+
 
 @app.route('/')
 def index():
     return Response(
             render_template('index.html', title="Computing Platform"),
             mimetype="text/html")
+
+
+@app.route('/<string:name>/', methods=['POST'])
+def proxy_nb(name):
+    return ('',200)
 
 
 api.add_resource(UserAPI, '/users/<string:name>',
@@ -48,6 +56,8 @@ api.add_resource(UserAdminAPI, '/users/admin',
                  endpoint='u_admin')
 api.add_resource(UserLoginAPI, '/users/login',
                  endpoint='u_login')
+#api.add_resource(ProxyAPI, '/<string:name>',
+#                 endpoint='user_nb')
 
 # session:
 # logged_in [bool] 

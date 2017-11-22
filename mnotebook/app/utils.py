@@ -8,12 +8,11 @@ from yapf.yapflib.yapf_api import FormatCode
 
 import docker
 client = docker.from_env()
-container_fields_of_interest = ('name', 'id', 'status', 'image')
 
 # container image names mapping:
 cname_map = {
-        'phyapps:1.5-ss': 'tonyzhang/phyapps:release-1.5-ss',
-        'phyapps:1.5': 'tonyzhang/phyapps:release-1.5',
+        'phyapps:1.6-ss': 'tonyzhang/phyapps:release-1.6-ss',
+        'phyapps:1.6': 'tonyzhang/phyapps:release-1.6',
 }
 
 # accelerator section names mapping:
@@ -140,13 +139,19 @@ def get_container(cid):
         return None
 
 
-def create_new_container(data):
+def create_new_container(user, **kws):
     """Create new container.
     
     Parameters
     ----------
-    data : dict
-        'image': image name, other keys: parameters.
+    user: User
+        User owns new container.
+
+    Keyword Parameters
+    ------------------
+    'image': image name,
+    'mach': machine section,
+     other keys: parameters.
 
     Returns
     -------
@@ -156,30 +161,37 @@ def create_new_container(data):
         nb_url: url of nb if available.
         ss_url: url of ss if available.
     """
-    image = data.get('image')
-    mach = data.get('mach', None)
-    kws = {k:v for k,v in data.items() if k not in ['image', 'mach']}
-    cid, cname, nb_url, ss_url = _create_new_container(image, mach, **kws)
+    image = kws.get('image')
+    mach = kws.get('mach', None)
+    uname = kws.get('uname')
+    token = user.password_hash
+    kws1 = {k:v for k,v in kws.items()
+            if k not in ['image', 'mach', 'uname']}
+    cid, cname, nb_url, ss_url = _create_new_container(
+            image, mach, uname, token, **kws1)
     return cid, cname, nb_url, ss_url
 
 
-def _create_new_container(image, mach, **kws):
+def _create_new_container(image, mach, uname, token, **kws):
     global NB_PORT, SS_PORT
     if mach is not None:
         # --mach parameter
         image_name = cname_map[image]
-        command = ['--mach', mach_map[mach]]
+        command = ['--mach', mach_map[mach],
+                   '--NotebookApp.base_url=' + "'{}/'".format(uname),
+                   '--NotebookApp.token=' + "'{}'".format(token),
+                   '--NotebookApp.password=' + "''"]
         nb_url, ss_url = None, None
 
         if 'ss' in image_name:
-            NB_PORT += 1
-            SS_PORT += 1
+            NB_PORT += 10
+            SS_PORT += 10
             ports = {'8888': ('127.0.0.1', NB_PORT),
                      '4810': ('127.0.0.1', SS_PORT)}
         else:
-            NB_PORT += 1
+            NB_PORT += 10
             ports = {'8888': NB_PORT}
-        
+
         try:
             c = client.containers.create(image_name,
                     command=command,

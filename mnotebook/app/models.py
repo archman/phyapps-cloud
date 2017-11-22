@@ -2,11 +2,13 @@
 
 import re
 from datetime import datetime
+from flask import url_for
 
 from passlib.apps import custom_app_context as pwd_context
 
 from . import db
 from .utils import utc2local
+from .utils import get_container
 from .utils import get_container_status
 from .utils import get_container_name
 from .utils import get_container_image
@@ -15,6 +17,8 @@ from .utils import get_container_ctime
 from .utils import get_container_uptime
 from .utils import get_container_shortid
 from .utils import get_container_url
+from .utils import validate_container
+from .proxy import new_proxy
 
 
 class Admin(db.Model):
@@ -78,23 +82,31 @@ class User(db.Model):
     @property
     def container_name(self):
         try:
-            return self.containers[0].name
+            return self.containers[-1].name
+        except IndexError:
+            return "Unknown"
+
+    @property
+    def container_id(self):
+        try:
+            return self.containers[-1].shortid
         except IndexError:
             return "Unknown"
 
     @property
     def container_status(self):
         try:
-            return self.containers[0].status
+            return self.containers[-1].status
         except IndexError:
             return "Unknown"
 
     @property
     def notebook_url(self):
-        try:
-            return self.containers[0].notebook_url
-        except:
-            return "Unknown"
+        #try:
+        #    return self.containers[-1].notebook_url
+        #except:
+        #    return "Unknown"
+        return url_for('proxy_nb', name=self.name)
 
     def __repr__(self):
         return "<User '{}'>".format(self.name)
@@ -105,7 +117,7 @@ class User(db.Model):
     def verify_password(self, passwd):
         return pwd_context.verify(passwd, self.password_hash)
 
-    # 
+    #
     @property
     def is_authenticated(self):
         return True
@@ -123,11 +135,11 @@ class Container(db.Model):
 
     def __repr__(self):
         return "<Container '{}'>".format(self.name)
-    
+
     @property
     def name(self):
         return get_container_name(self.cid)
-    
+
     @property
     def shortid(self):
         return get_container_shortid(self.cid)
@@ -159,3 +171,11 @@ class Container(db.Model):
     @property
     def notebook_url(self):
         return get_container_url(self.cid, 8888)
+
+    @property
+    def notebook_proxy_url(self):
+        return new_proxy(self.user.name, self.notebook_url)
+
+    def get_container(self):
+        return get_container(self.cid)
+

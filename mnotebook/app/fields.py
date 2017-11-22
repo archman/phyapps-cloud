@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from flask_restful import fields
-from flask_restful import marshal
 
 
 container_fields = {
@@ -15,8 +14,9 @@ container_fields = {
     'ports': fields.String,
     'timestamp': fields.String(attribute='local_time'),
     'owner': fields.String(attribute=lambda x:x.user.name),
-    'notebook_url': fields.String(attribute='notebook_url')
+    'notebook_url': fields.String(attribute='notebook_proxy_url')
 }
+
 
 admin_fields = {
     'nickname': fields.String,
@@ -31,6 +31,7 @@ user_fields = {
     'description': fields.String,
     'notebook_url': fields.String(attribute='notebook_url'),
     'container_name': fields.String(attribute='container_name'),
+    'container_id': fields.String(attribute='container_id'),
     'container_status': fields.String(attribute='container_status'),
     'timestamp': fields.String(attribute='local_time'),
     'password_hash': fields.String,
