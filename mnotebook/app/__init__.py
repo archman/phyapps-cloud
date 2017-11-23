@@ -41,9 +41,11 @@ def index():
             mimetype="text/html")
 
 
-@app.route('/<string:name>/', methods=['POST'])
+@app.route('/<string:name>/', methods=['GET'])
 def proxy_nb(name):
-    return ('',200)
+    return Response(
+            render_template('nb_404.html'),
+            mimetype="text/html")
 
 
 api.add_resource(UserAPI, '/users/<string:name>',
@@ -60,5 +62,5 @@ api.add_resource(UserLoginAPI, '/users/login',
 #                 endpoint='user_nb')
 
 # session:
-# logged_in [bool] 
+# logged_in [bool]
 # logged_in_user [string], logged_in_admin [string]
