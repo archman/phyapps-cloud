@@ -190,7 +190,7 @@ def _create_new_container(image, mach, uname, token, **kws):
                      '4810': ('127.0.0.1', SS_PORT)}
         else:
             NB_PORT += 10
-            ports = {'8888': NB_PORT}
+            ports = {'8888': ('127.0.0.1', NB_PORT)}
 
         try:
             c = client.containers.create(image_name,
