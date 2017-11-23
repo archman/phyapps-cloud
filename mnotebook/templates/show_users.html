@@ -88,6 +88,8 @@
                         <td><span style="min-width:70px;display:inline-block;" class="label label-danger text-uppercase">{{ user.container_status }}</span></td>
                         {% elif user.container_status == 'paused' %}
                         <td><span style="min-width:70px;display:inline-block;" class="label label-warning text-uppercase">{{ user.container_status }}</span></td>
+                        {% else %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-default text-uppercase">{{ user.container_status }}</span></td>
                         {% endif %}
                         <td><tt>{{ user.timestamp }}</tt></td>
                     </tr>

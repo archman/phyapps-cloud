@@ -35,6 +35,28 @@
 <script src="{{ url_for('static', filename='js/user.js') }}"></script>
 <script src="{{ url_for('static', filename='js/nb.js') }}"></script>
 
+<script>
+$(function() {
+    $(".btn-fix-url").click(function() {
+        var url = $(this).data('url');
+
+        console.log(url);
+
+        $.ajax({
+            type: "PUT",
+            url: url,
+            success: function() {
+                console.log('succeed');
+                location.reload();
+            },
+            error: function() {
+                console.log('failed');
+            }
+        });
+    });
+})
+</script>
+
 <div class="mybs">
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#users_panel">Users</a></li>
@@ -102,7 +124,17 @@
                         {% else %}
                         <td><tt>{{ user.container_name }}</tt></td>
                         {% endif %}
-                        <td>{{ user.container_status }}</td>
+
+                        {% if user.container_status == 'running' %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-success text-uppercase">{{ user.container_status }}</span></td>
+                        {% elif user.container_status == 'exited' %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-danger text-uppercase">{{ user.container_status }}</span></td>
+                        {% elif user.container_status == 'paused' %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-warning text-uppercase">{{ user.container_status }}</span></td>
+                        {% else %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-default text-uppercase">{{ user.container_status }}</span></td>
+                        {% endif %}
+
                         <td><tt>{{ user.timestamp }}</tt></td>
                     </tr>
                     {% endfor %}
@@ -142,7 +174,17 @@
                     <tr>
                         <td><a href="{{ url_for('container', name=container.name) }}">{{ container.name }}</a></td>
                         <td>{{ container.shortid }}</td>
-                        <td>{{ container.status }}</td>
+
+                        {% if container.status == 'running' %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-success text-uppercase">{{ container.status }}</span></td>
+                        {% elif container.status == 'exited' %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-danger text-uppercase">{{ container.status }}</span></td>
+                        {% elif container.status == 'paused' %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-warning text-uppercase">{{ container.status }}</span></td>
+                        {% else %}
+                        <td><span style="min-width:70px;display:inline-block;" class="label label-default text-uppercase">{{ container.status }}</span></td>
+                        {% endif %}
+
                         {% if container.notebook_url %}
                         <td><a href="{{ container.notebook_url }}">{{ container.notebook_url }}</a></td>
                         {% else %}
@@ -153,6 +195,7 @@
                         <td>{{ container.owner }}</td>
                     </tr>
                     {% endfor %}
+                    <td colspan=7><button class="btn btn-default btn-xs btn-fix-url" data-url="{{ url_for('users') }}">Fix URLs</button></td>
                     </tbody>
                 </table>
             </div>
