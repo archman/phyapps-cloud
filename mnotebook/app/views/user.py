@@ -44,7 +44,7 @@ class UserAPI(Resource):
                         user=marshal(user, user_fields),
                         title="Inspection of {}".format(name)),
                     mimetype='text/html')
-    
+
     #@auth.login_required
     def put(self, name):
         # update user configuration.
@@ -64,7 +64,7 @@ class UserAPI(Resource):
 
         db.session.commit()
         return {'user': marshal(user, user_fields)}
-    
+
     def _update_container(self, user, cname):
         """Update container for user.
         """
@@ -118,6 +118,16 @@ class UserListAPI(Resource):
                     render_template('show_users.html',
                         users=[marshal(u, user_fields) for u in users]),
                         mimetype='text/html')
+
+    def put(self):
+        # fix urls
+        all_users = User.query.all()
+        for u in all_users:
+            nb_url0 = u.containers[-1].notebook_url
+            if nb_url0 != 'Unknown':
+                update_proxy(u.name, nb_url0)
+            # update URL (API) --> (URL (PROXY)) in Containers/admin panel
+        return {'resule': True}, 200
 
     #@auth.login_required
     def post(self):
