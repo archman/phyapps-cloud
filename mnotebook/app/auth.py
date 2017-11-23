@@ -2,11 +2,14 @@ from flask_httpauth import HTTPBasicAuth
 from flask import make_response
 from flask import jsonify
 from flask import session
+from flask import Response
+from flask import render_template
 
 from passlib.apps import custom_app_context
 
 from .models import User
 from .models import Admin
+from .utils import request_json
 
 auth = HTTPBasicAuth()
 
@@ -41,4 +44,7 @@ def verify_password(username, password):
 
 @auth.error_handler
 def unauthorized():
-    return make_response(jsonify({'error': 'Unauthorized access'}), 401)
+    if request_json():
+        return make_response(jsonify({'error': 'Unauthorized access'}), 401)
+    return Response(
+                render_template('admin_401.html'),mimetype='text/html')
