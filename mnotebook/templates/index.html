@@ -1,13 +1,30 @@
 {% extends "base.html" %}
 {% block container %}
 
-<style type="text/css">
-    .bs{
-        margin: 20px;
-    }
-</style>
-<div class="bs">
-    <p>Welcome to Computing Platform for High-level Accelerator Physics Control.</p>
+<div class="container">
+    <h2 class="text-center" style="line-height: 160%;">Welcome to the Computing Platform for High-level Physics Controls of FRIB Accelerator.
+    </h2>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="text text-danger">Guideline</h4>
+        </div>
+        <div class="panel-body">
+            <ul class="list-unstyled" style="line-height:220%">
+                <li>Login via <a href="{{ url_for('u_login') }}">here</a>, for new user, sign up first;</li>
+                <li>Click the user name to access user configuration management;</li>
+                    <ul>
+                        <li>Update basic user information via 
+                            <span><i class="glyphicon glyphicon-wrench"></i></span>
+                        </li>
+                        <li>Update service via
+                            <span><i class="glyphicon glyphicon-equalizer"></i></span>
+                        </li>
+                    </ul>
+                <li>Click <b>Service Name</b> to control service;</li>
+                <li>Click <b>Notebook URL</b> to get access into notebook.</li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

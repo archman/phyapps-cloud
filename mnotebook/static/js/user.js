@@ -165,7 +165,7 @@ $(function() {
                 location.reload();
             },
             error: function() {
-                alert("Not update user's service");
+                alert("Failed to update user's service, START and UPDATE again.");
             }
         });
     });
