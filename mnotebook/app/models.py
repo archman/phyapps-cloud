@@ -17,6 +17,7 @@ from .utils import get_container_ctime
 from .utils import get_container_uptime
 from .utils import get_container_shortid
 from .utils import get_container_url
+from .utils import get_container_mach
 from .utils import validate_container
 
 
@@ -166,6 +167,10 @@ class Container(db.Model):
     @property
     def notebook_url(self):
         return get_container_url(self.cid, 8888)
+
+    @property
+    def mach(self):
+        return get_container_mach(self.cid)
 
     def get_container(self):
         return get_container(self.cid)

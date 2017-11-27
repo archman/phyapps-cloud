@@ -99,6 +99,16 @@ def get_container_shortid(cid):
     except:
         return  'Unknown'
 
+def get_container_mach(cid):
+    """ Returm machine name, only works for phyapps image.
+    """
+    try:
+        c = client.containers.get(cid)
+        args = c.attrs['Args']
+        return args[args.index('--mach') + 1]
+    except:
+        return 'Unknown'
+
 
 def get_container_url(cid, port=8888):
     """ Return server urls.
