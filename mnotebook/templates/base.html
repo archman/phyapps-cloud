@@ -6,9 +6,14 @@
         <title>{{ title }}</title>
 
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-3.3.7/css/bootstrap.min.css') }}">
-        <style type="text/css">
-            .mybs{
+        <style>
+            .mybs {
                 margin: 20px;
+            }
+            .mynavbar {
+                font-weight: 550;
+                color: #2E3436;
+                background-color: #F9F9F9;
             }
         </style>
         <script src="{{ url_for('static', filename='bootstrap-3.3.7/js/jquery-3.2.1.min.js') }}"></script>
@@ -17,7 +22,7 @@
     </head>
     </body>
         <div class="mybs">
-            <nav class="navbar navbar-default">
+            <nav class="navbar navbar-default mynavbar">
                 <div class="navbar-header">
                     <button type="button" data-target="#navbarCollpase" data-toggle="collapse" class="navbar-toggle">
                         <span class="sr-only">Toggle navigation</span>
@@ -25,7 +30,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="#" class="navbar-brand">Computing Platform</a>
+                    <a href="{{ url_for('index') }}" class="navbar-brand"><img src="{{ url_for('static', filename='img/frib-logo.png') }}" style="height:100%; width:auto;"></a>
                 </div>
                 <div id="navbarCollpase" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
@@ -50,5 +55,12 @@
             </nav>
         </div>
         {% block container %}{% endblock %}
+        <footer>
+        <div class="footer-copyright navbar-fixed-bottom text-center">
+            <div class="container">
+                &copy; 2017 Copyright <a href="https://frib.msu.edu/" target="_blank"> Facility for Rare Isotope Beams, Michigan State University. </a>
+            </div>
+        </div>
+        </footer>
     </body>
 </html>
