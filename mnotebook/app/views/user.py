@@ -72,15 +72,16 @@ class UserAPI(Resource):
         new_c = Container.query.filter_by(cid=cid).first()
         if c is not None:
             try:
-                for idx, ic in enumerate(user.containers[:-1]):
-                    try:
-                        print('removing', ic)
-                        db.session.delete(ic)
-                        ic.get_container().stop()
-                        ic.get_container().remove()
-                    except:
-                        print(ic)
-                db.session.commit()
+                self._clean_containers(user.containers[:-1])
+                #for idx, ic in enumerate(user.containers[:-1]):
+                #    try:
+                #        print('removing', ic)
+                #        db.session.delete(ic)
+                #        ic.get_container().stop()
+                #        ic.get_container().remove()
+                #    except:
+                #        print(ic)
+                #db.session.commit()
             except:
                 print("stop container")
             user.containers[-1].get_container().start()
@@ -88,11 +89,26 @@ class UserAPI(Resource):
             update_proxy(user.name, new_c.notebook_url)
             print('update with new container')
 
+    def _clean_containers(self, cobj):
+        # cobj: list of container model object
+        for idx, ic in enumerate(cobj):
+            try:
+                db.session.delete(ic)
+                ic.get_container().stop()
+                ic.get_container().remove()
+            except:
+                print("Clean Error")
+        db.session.commit()
+        
+
     #@auth.login_required
     def delete(self, name):
         user = User.query.filter(User.name==name).first()
         if user is None:
             abort(404)
+        # delete container
+        self._clean_containers(user.containers)
+        # delete user
         db.session.delete(user)
         db.session.commit()
         return {'result': True}
