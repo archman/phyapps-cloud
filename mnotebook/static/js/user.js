@@ -67,8 +67,8 @@ $(function() {
                      'description': desc,
                      'container_id': cid};
         
-        console.log(data);
-        console.log(url);
+        //console.log(data);
+        //console.log(url);
 
         $.ajax({
             type: "POST",
@@ -92,10 +92,10 @@ $(function() {
         var cname = $(this).data('cname');
         var uname = $(this).data('uname');
 
-        console.log("curl:", curl);
-        console.log("cid:", cid);
-        console.log("cname:", cname);
-        console.log("uname:", uname);
+        //console.log("curl:", curl);
+        //console.log("cid:", cid);
+        //console.log("cname:", cname);
+        //console.log("uname:", uname);
 
         $(".modal-body #uname").val(uname);
         $(".modal-body #cid").val(cid);
@@ -117,11 +117,11 @@ $(function() {
         var url    = $(this).data('url');
         var data   = {'image': cimage, 'mach': csect, 'uname': uname,};
 
-        console.log("uname:", uname);
-        console.log("cimage:", cimage);
-        console.log("section:", csect);
-        console.log("url:", url);
-        console.log(JSON.stringify(data));
+        //console.log("uname:", uname);
+        //console.log("cimage:", cimage);
+        //console.log("section:", csect);
+        //console.log("url:", url);
+        //console.log(JSON.stringify(data));
 
         $.ajax({
             type: "POST",
@@ -152,8 +152,8 @@ $(function() {
         var cname  = $(".modal-body #cname").val();
         var data = {'container_name': cname}
         
-        console.log(JSON.stringify(data));
-        console.log(url)
+        //console.log(JSON.stringify(data));
+        //console.log(url)
 
         $.ajax({
             type: "PUT",

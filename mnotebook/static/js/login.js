@@ -31,8 +31,8 @@ $(function() {
         var password = $(".input-group #inputPassword").val()
         var data = {'username': username, 'password': password, "op": op};
 
-        console.log(url);
-        console.log(data);
+        //console.log(url);
+        //console.log(data);
 
         $.ajax({
             type: "POST",
@@ -40,8 +40,8 @@ $(function() {
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf-8",
             success: function(r, status_code) {
-                console.log(status_code);
-                console.log(r);
+                //console.log(status_code);
+                //console.log(r);
                 alert("New User " + username +" Signed Up!");
                 $(location).attr('href', surl);
             },
