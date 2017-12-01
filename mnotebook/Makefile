@@ -39,9 +39,10 @@ clean:
 
 #1
 init_db:
+	# rm -rf app.db
+	rm -rf migrations
 	source $(ENV_PATH)/bin/activate && \
 		export FLASK_APP=$(FLASK_APP) && \
-		rm -rf app.db migrations && \
 		flask db init && \
 		flask db migrate && \
 		flask db upgrade && \
