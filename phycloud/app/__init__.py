@@ -37,7 +37,7 @@ from flask import redirect
 @app.route('/')
 def index():
     return Response(
-            render_template('index.html', title="Computing Platform"),
+            render_template('index.html', title="Phyapps Cloud"),
             mimetype="text/html")
 
 
