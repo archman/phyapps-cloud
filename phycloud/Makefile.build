@@ -1,0 +1,14 @@
+# Makefile: build docker image
+# make mnb
+
+PKGNAME := tonyzhang/phyapps-notebook:dev
+
+pack:
+	tar cjvf phycloud.tar.bz2 app templates static config.py \
+		requirements.txt run.py
+mnb: pack
+	docker build -t $(PKGNAME) .
+push:
+	docker tag $(PKGNAME) $(PKGNAME)
+	docker push $(PKGNAME)
+
