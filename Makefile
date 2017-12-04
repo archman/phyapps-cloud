@@ -1,44 +1,51 @@
-.PHONY: deploy clean
+.PHONY: deploy stop proxy mnb routes
 
-#TOKEN=$(head -c 30 /dev/urandom | xxd -p)
-TOKEN = 0b20cdf3c951d25936d27fc4405eb23e2e29790b00
+#
+# change this every time before deployment
+# e.g.: TOKEN=$(head -c 30 /dev/urandom | xxd -p)
+# if needs to get routes later, use static string for TOKEN.
+# 
+TOKEN := $(shell head -c 30 /dev/urandom | xxd -p)
+IPNOW := $(shell ip address show enx18dbf2615ea9 | \
+		  /bin/grep "\<inet\>" | cut -c10-20)
+IMAGE_MNB := "tonyzhang/phyapps-notebook:dev"
+IMAGE_PROXY := "jupyter/configurable-http-proxy"
 
-deploy:
-	docker stack deploy -c docker-compose.yml phyapps
-
-clean:
-	docker stack rm phyapps
-	docker container stop $$(docker ps -aq)
-	docker container rm $$(docker ps -aq)
+deploy: proxy mnb
+stop: stop-proxy stop-mnb
 
 proxy:
-	docker run -e CONFIGPROXY_AUTH_TOKEN=$(TOKEN) \
+	@docker run -d \
+		-e CONFIGPROXY_AUTH_TOKEN=$(TOKEN) \
 		--name=proxy \
 		--net=host \
 		-v $(shell pwd)/ssl:/ssl \
-		jupyter/configurable-http-proxy \
+		$(IMAGE_PROXY) \
 		--log-level debug \
 		--ssl-key /ssl/key.pem \
 		--ssl-cert /ssl/cert.pem \
-		--ip 35.9.58.117 \
+		--ip $(IPNOW) \
+		--port 8000 \
 		--default-target http://127.0.0.1:5050
 
+mnb:
+	@docker run -d \
+		-e PROXY_TOKEN=$(TOKEN) \
+		-e PROXY_BASE="http://127.0.0.1:8001/api/routes" \
+		-p 5050:5050 \
+		--name=mnb \
+		--net=host \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		$(IMAGE_MNB)
+
 stop-proxy:
-	docker container stop proxy
-	docker container rm proxy
+	@docker container stop proxy
+	@docker container rm proxy
 
-post-routes:
-	curl -H "Authorization: token $(TOKEN)" \
-		-d '{"target":"http://127.0.0.1:31002"}' \
-		-X POST http://127.0.0.1:8001/api/routes/user1/
+stop-mnb:
+	@docker container stop mnb
+	@docker container rm mnb
 
-get-routes:
-	curl -H "Authorization: token $(TOKEN)" \
+routes:
+	curl -H "Authorization: token $(TOKEN)" -X GET \
 		http://127.0.0.1:8001/api/routes
-
-orch:
-	export CONFIGPROXY_AUTH_TOKEN=$(TOKEN) && \
-	python tmpnb/orchestrate.py \
-		--pool-size=1 \
-		--port=5001 \
-		--use-tokens=True
