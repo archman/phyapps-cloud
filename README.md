@@ -41,15 +41,9 @@ Python packages.
 
 ## Screenshots
 
-<img src=/screenshots/01_index.png?raw=true alt="" witdth="400"></img>
-
-<img src=/screenshots/02_login.png?raw=true alt="" witdth="400"></img>
-
-<img src=/screenshots/03_users.png?raw=true alt="" witdth="400"></img>
-
-<img src=/screenshots/04_service_admin.png?raw=true alt="" witdth="400"></img>
-
-<img src=/screenshots/05_service_new.png?raw=true alt="" witdth="400"></img>
-
-<img src=/screenshots/06_notebook.png?raw=true alt="" witdth="400"></img>
-
+<img src="/screenshots/01_index.png?raw=true" alt="Home Page" title="Home Page" width="400"/><img src="/screenshots/02_login.png?raw=true" alt="Login Page" title="Login Page" width="400"/>
+---
+<img src="/screenshots/03_users.png?raw=true" alt="Users Activities" title="Users Activities" width="400"/><img src="/screenshots/04_service_admin.png?raw=true" alt="Service Control" title="Service Control" width="400"/>
+---
+<img src="/screenshots/05_service_new.png?raw=true" alt="Create New Service" title="Create New Service" width="400"/><img src="/screenshots/06_notebook.png?raw=true" alt="Jupyter Notebook" title="Jupyter Notebook" width="400"/>
+---
