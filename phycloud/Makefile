@@ -14,7 +14,7 @@ ENV_PATH = $(HOME)/mnb-env
 IPNOW := $(shell ip address show enx18dbf2615ea9 | \
 		  /bin/grep "\<inet\>" | cut -c10-20)
 
-PROXY_TOKEN = '0b20cdf3c951d25936d27fc4405eb23e2e29790b00'
+PROXY_TOKEN = '6520fbd2223339e729c99b4f1730f1dd2098b57c3f3d692a37ba6fecc553'
 PROXY_BASE = 'http://127.0.0.1:8001/api/routes'
 
 env:
