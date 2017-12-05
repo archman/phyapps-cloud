@@ -3,4 +3,5 @@ $(function() {
         token = $(this).data('token');
         return $(this).attr('href') + '?token=' + token;
     })
+    $("a.nblink").attr("target", "_blank");
 })
