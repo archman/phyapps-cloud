@@ -4,11 +4,13 @@
 PKGNAME := tonyzhang/phyapps-notebook:dev
 
 pack:
-	tar cjvf phycloud.tar.bz2 app templates static config.py \
-		requirements.txt run.py
-mnb: pack
-	docker build -t $(PKGNAME) .
-push:
+	tar cjvf phycloud.tar.bz2 app templates static \
+		config.py requirements.txt run.py
+
+build: pack
+	docker build --no-cache -t $(PKGNAME) .
+
+push: build
 	docker tag $(PKGNAME) $(PKGNAME)
 	docker push $(PKGNAME)
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 from datetime import datetime
 import pytz
 import tzlocal
@@ -11,6 +12,8 @@ client = docker.from_env()
 
 # container image names mapping:
 cname_map = {
+        'phyapps:1.7-ss': 'tonyzhang/phyapps:release-1.7-ss',
+        'phyapps:1.7': 'tonyzhang/phyapps:release-1.7',
         'phyapps:1.6-ss': 'tonyzhang/phyapps:release-1.6-ss',
         'phyapps:1.6': 'tonyzhang/phyapps:release-1.6',
 }
@@ -24,6 +27,12 @@ mach_map = {
 
 # initla port number:
 NB_PORT, SS_PORT = 31000, 32000
+
+# default mount data directory
+if 'DPATH' in os.environ:
+    DPATH_DEFAULT = os.environ['DPATH']
+else:
+    DPATH_DEFAULT = os.path.abspath(os.path.curdir)
 
 
 def utc2local(u_time):
@@ -174,15 +183,17 @@ def create_new_container(user, **kws):
     image = kws.get('image')
     mach = kws.get('mach', None)
     uname = kws.get('uname')
+    dpath = kws.get('dpath', DPATH_DEFAULT)
+
     token = user.password_hash
     kws1 = {k:v for k,v in kws.items()
-            if k not in ['image', 'mach', 'uname']}
+            if k not in ['image', 'mach', 'uname', 'dpath']}
     cid, cname, nb_url, ss_url = _create_new_container(
-            image, mach, uname, token, **kws1)
+            image, mach, uname, dpath, token, **kws1)
     return cid, cname, nb_url, ss_url
 
 
-def _create_new_container(image, mach, uname, token, **kws):
+def _create_new_container(image, mach, uname, dpath, token, **kws):
     global NB_PORT, SS_PORT
     if mach is not None:
         # --mach parameter
@@ -206,6 +217,9 @@ def _create_new_container(image, mach, uname, token, **kws):
             c = client.containers.create(image_name,
                     command=command,
                     ports=ports,
+                    #volumes={
+                    #    dpath: {'bind': "/phyapps", "mode": "ro"},
+                    #},
                     detach=True, tty=True, **kws)
         except:
             return None, 'Unknown', nb_url, ss_url

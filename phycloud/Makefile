@@ -11,11 +11,28 @@ ENV_PATH = $(HOME)/mnb-env
 
 #PROXY_TOKEN = $(PROXY_TOKEN)
 
+IPNOW := $(shell ip address show enx18dbf2615ea9 | \
+		  /bin/grep "\<inet\>" | cut -c10-20)
+
 PROXY_TOKEN = '0b20cdf3c951d25936d27fc4405eb23e2e29790b00'
 PROXY_BASE = 'http://127.0.0.1:8001/api/routes'
 
 env:
 	virtualenv $(ENV_PATH)
+
+proxy:
+	docker run \
+		-e CONFIGPROXY_AUTH_TOKEN=$(TOKEN) \
+		--name=proxy \
+		--net=host \
+		-v $(shell pwd)/../ssl:/ssl \
+		jupyter/configurable-http-proxy \
+		--log-level debug \
+		--ssl-key /ssl/key.pem \
+		--ssl-cert /ssl/cert.pem \
+		--ip $(IPNOW)\
+		--port 8000 \
+		--default-target http://127.0.0.1:5050
 
 env_pkg:
 	source $(ENV_PATH)/bin/activate && \

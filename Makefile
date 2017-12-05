@@ -5,11 +5,13 @@
 # e.g.: TOKEN=$(head -c 30 /dev/urandom | xxd -p)
 # if needs to get routes later, use static string for TOKEN.
 # 
-TOKEN := $(shell head -c 30 /dev/urandom | xxd -p)
+#TOKEN := $(shell head -c 30 /dev/urandom | xxd -p)
+TOKEN = 6520fbd2223339e729c99b4f1730f1dd2098b57c3f3d692a37ba6fecc553
 IPNOW := $(shell ip address show enx18dbf2615ea9 | \
 		  /bin/grep "\<inet\>" | cut -c10-20)
 IMAGE_MNB := "tonyzhang/phyapps-notebook:dev"
 IMAGE_PROXY := "jupyter/configurable-http-proxy"
+DPATH := $(shell pwd)
 
 deploy: proxy mnb
 stop: stop-proxy stop-mnb
@@ -29,9 +31,10 @@ proxy:
 		--default-target http://127.0.0.1:5050
 
 mnb:
-	@docker run -d \
+	@docker run -t -d \
 		-e PROXY_TOKEN=$(TOKEN) \
 		-e PROXY_BASE="http://127.0.0.1:8001/api/routes" \
+		-e DPATH=$(DPATH) \
 		-p 5050:5050 \
 		--name=mnb \
 		--net=host \
