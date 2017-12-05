@@ -7,11 +7,13 @@
 # 
 #TOKEN := $(shell head -c 30 /dev/urandom | xxd -p)
 TOKEN = 6520fbd2223339e729c99b4f1730f1dd2098b57c3f3d692a37ba6fecc553
-IPNOW := $(shell ip address show enx18dbf2615ea9 | \
+ETH0  = enx18dbf2615ea9 
+IPNOW := $(shell ip address show $(ETH0) | \
 		  /bin/grep "\<inet\>" | cut -c10-20)
 IMAGE_MNB := "tonyzhang/phyapps-notebook:dev"
 IMAGE_PROXY := "jupyter/configurable-http-proxy"
 DPATH := $(shell pwd)
+
 
 deploy: proxy mnb
 stop: stop-proxy stop-mnb
