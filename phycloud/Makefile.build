@@ -1,7 +1,7 @@
 # Makefile: build docker image
 # make mnb
 
-PKGNAME := tonyzhang/phyapps-notebook:dev
+PKGNAME := tonyzhang/phyapps-notebook:latest
 
 pack:
 	tar cjvf phycloud.tar.bz2 app templates static \
