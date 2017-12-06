@@ -6,6 +6,7 @@
         <title>{{ title }}</title>
 
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-3.3.7/css/bootstrap.min.css') }}">
+        <!--<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">-->
         <style>
             .mybs {
                 margin: 20px;
@@ -15,7 +16,12 @@
                 color: #2E3436;
                 background-color: #F9F9F9;
             }
+            body {
+                font-family: 'Trebuchet MS', sans-serif !important;
+            }
         </style>
+
+
         <script src="{{ url_for('static', filename='bootstrap-3.3.7/js/jquery-3.2.1.min.js') }}"></script>
         <script src="{{ url_for('static', filename='bootstrap-3.3.7/js/bootstrap.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/logout.js') }}"></script>

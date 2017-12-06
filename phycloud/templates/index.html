@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block container %}
 
+<link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+
 <div class="container">
-    <h2 class="text-center" style="line-height: 160%;">
+    <h2 class="text-center">
         Welcome to the Development Platform for High-level Physics Controls
     </h2>
     <div class="panel panel-default">
@@ -10,11 +12,11 @@
             <h4 class="text text-danger">Guideline</h4>
         </div>
         <div class="panel-body">
-            <ul class="list-unstyled" style="line-height:220%;font-size:120%;">
+            <ul class="list-unstyled" style="line-height:180%;">
                 <li>Login via <a href="{{ url_for('u_login') }}">here</a>, for new user, sign up first;</li>
                 <li>Click the user name to access user configuration management;</li>
                     <ul>
-                        <li>Update basic user information via 
+                        <li>Update basic user information via
                             <span><i class="glyphicon glyphicon-wrench"></i></span>
                         </li>
                         <li>Update service via
@@ -24,6 +26,49 @@
                 <li>Click <b>Service Name</b> to control service;</li>
                 <li>Click <b>Notebook URL</b> to get access into notebook.</li>
             </ul>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="text text-danger">Available Services</h4>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-sm-1">Status</th>
+                        <th class="col-sm-2">Name</th>
+                        <th class="col-sm-9">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i class="em em-ok"></i></td>
+                        <td>phyapps-1.7-ss</td>
+                        <td><small>Physics applications development environment, with scan service, with sample notebooks</small></td>
+                    </tr>
+                    <tr>
+                        <td><i class="em em-ok"></i></td>
+                        <td>phyapps-1.7</td>
+                        <td><small>Physics applications development environment, w/o scan service, with sample notebooks</small></td>
+                    </tr>
+                    <tr>
+                        <td><i class="em em-ok"></i></td>
+                        <td>phyapps-1.6-ss</td>
+                        <td><small>Physics applications development environment, with scan service, w/o sample notebooks</small></td>
+                    </tr>
+                    <tr>
+                        <td><i class="em em-ok"></i></td>
+                        <td>phyapps-1.6</td>
+                        <td><small>Physics applications development environment, w/o scan service, w/o sample notebooks</small></td>
+                    </tr>
+                    <tr>
+                        <td><i class="em em-ok"></i></td>
+                        <td>notebook</td>
+                        <td>Jupyter notebook with third-party packages (<code>numpy</code>, <code>scipy</code>, <code>matplotlib</code>, <code>opencv</code>, etc.), w/o virtual accelerator</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
