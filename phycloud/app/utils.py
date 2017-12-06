@@ -16,6 +16,7 @@ cname_map = {
         'phyapps:1.7': 'tonyzhang/phyapps:release-1.7',
         'phyapps:1.6-ss': 'tonyzhang/phyapps:release-1.6-ss',
         'phyapps:1.6': 'tonyzhang/phyapps:release-1.6',
+        'notebook': 'tonyzhang/notebook:latest',
 }
 
 # accelerator section names mapping:
@@ -195,35 +196,40 @@ def create_new_container(user, **kws):
 
 def _create_new_container(image, mach, uname, dpath, token, **kws):
     global NB_PORT, SS_PORT
-    if mach is not None:
+    image_name = cname_map[image]
+    if mach is not None and mach != '':
         # --mach parameter
-        image_name = cname_map[image]
-        command = ['--mach', mach_map[mach],
-                   '--NotebookApp.base_url=' + "'{}/'".format(uname),
-                   '--NotebookApp.token=' + "'{}'".format(token),
-                   '--NotebookApp.password=' + "''"]
-        nb_url, ss_url = None, None
+        command = ['--mach', mach_map[mach]]
+    elif mach == '':
+        command = []
 
-        if 'ss' in image_name:
-            NB_PORT += 10
-            SS_PORT += 10
-            ports = {'8888': ('127.0.0.1', NB_PORT),
-                     '4810': ('127.0.0.1', SS_PORT)}
-        else:
-            NB_PORT += 10
-            ports = {'8888': ('127.0.0.1', NB_PORT)}
+    nb_url, ss_url = None, None
 
-        try:
-            c = client.containers.create(image_name,
-                    command=command,
-                    ports=ports,
-                    #volumes={
-                    #    dpath: {'bind': "/phyapps", "mode": "ro"},
-                    #},
-                    detach=True, tty=True, **kws)
-        except:
-            return None, 'Unknown', nb_url, ss_url
-        
-        nb_url = "http://127.0.0.1:{}".format(NB_PORT)
-        ss_url = "http://127.0.0.1:{}".format(SS_PORT)
-        return c.id, c.name, nb_url, ss_url
+    command.extend(['--NotebookApp.base_url=' + "'{}/'".format(uname),
+                    '--NotebookApp.token=' + "'{}'".format(token),
+                    '--NotebookApp.password=' + "''"]
+    )
+
+    if 'ss' in image_name:
+        NB_PORT += 10
+        SS_PORT += 10
+        ports = {'8888': ('127.0.0.1', NB_PORT),
+                 '4810': ('127.0.0.1', SS_PORT)}
+    else:
+        NB_PORT += 10
+        ports = {'8888': ('127.0.0.1', NB_PORT)}
+
+    try:
+        c = client.containers.create(image_name,
+                command=command,
+                ports=ports,
+                #volumes={
+                #    dpath: {'bind': "/phyapps", "mode": "ro"},
+                #},
+                detach=True, tty=True, **kws)
+    except:
+        return None, 'Unknown', nb_url, ss_url
+    
+    nb_url = "http://127.0.0.1:{}".format(NB_PORT)
+    ss_url = "http://127.0.0.1:{}".format(SS_PORT)
+    return c.id, c.name, nb_url, ss_url

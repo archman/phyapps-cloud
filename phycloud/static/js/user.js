@@ -66,7 +66,7 @@ $(function() {
         var data  = {'username': username, 'password': password,
                      'description': desc,
                      'container_id': cid};
-        
+
         //console.log(data);
         //console.log(url);
 
@@ -116,7 +116,11 @@ $(function() {
         var csect  = $("#csect").val();
         var url    = $(this).data('url');
         var data   = {'image': cimage, 'mach': csect, 'uname': uname,};
-
+        
+        if (cimage == 'notebook')
+        {
+            data['mach'] = '';
+        }
         //console.log("uname:", uname);
         //console.log("cimage:", cimage);
         //console.log("section:", csect);
