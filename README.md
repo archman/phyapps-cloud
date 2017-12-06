@@ -22,6 +22,13 @@ Python packages.
 
 * The extensibility to support more serivces.
 
+* Available services:
+  + phyapps-1.7-ss
+  + phyapps-1.7
+  + phyapps-1.6-ss
+  + phyapps-1.6
+  + notebook
+
 ## Prerequisites
 
 * Install Docker & Pull Docker images:
