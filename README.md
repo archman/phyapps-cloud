@@ -41,8 +41,8 @@ Python packages.
 ## Deployment
 
 1. Download the [Makefile](https://github.com/archman/phyapps-cloud/blob/master/Makefile) of this repo.
-2. Change `ETH0` to be the name of your network interface.
-2. Type `make deploy` to deploy.
+2. Set `ETH0` to be the name of your network interface.
+2. Type `make deploy` to deploy, or `ETH0=eth0 make deploy`.
 3. Type `make stop` to stop.
 4. The URL should be `https://<your-ip-address>:8000`
 

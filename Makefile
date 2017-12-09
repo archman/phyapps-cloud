@@ -7,13 +7,14 @@
 # 
 #TOKEN := $(shell head -c 30 /dev/urandom | xxd -p)
 TOKEN = 6520fbd2223339e729c99b4f1730f1dd2098b57c3f3d692a37ba6fecc553
-ETH0  = enx18dbf2615ea9 
-IPNOW := $(shell ip address show $(ETH0) | \
-		  /bin/grep "\<inet\>" | cut -c10-20)
+ETH0  ?= enx18dbf2615ea9 
+IPNOW := $(shell ifconfig $(ETH0) | \
+		  /bin/grep "inet addr" | \
+		  awk -F':' '{print $$2}' | \
+		  awk '{print $$1}')
 IMAGE_MNB := "tonyzhang/phyapps-notebook:latest"
 IMAGE_PROXY := "jupyter/configurable-http-proxy"
 DPATH := $(shell pwd)
-
 
 deploy: proxy mnb
 stop: stop-proxy stop-mnb
@@ -54,3 +55,7 @@ stop-mnb:
 routes:
 	curl -H "Authorization: token $(TOKEN)" -X GET \
 		http://127.0.0.1:8001/api/routes
+
+update:
+	docker pull tonyzhang/phyapps-notebook
+	docker pull tonyzhang/notebook
