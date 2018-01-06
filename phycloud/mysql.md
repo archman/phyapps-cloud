@@ -8,7 +8,8 @@ CREATE DATABASE phyapps_cloud`;
 
 ```
 CREATE USER 'dev'@'localhost' IDENTIFIED BY 'dev';
-GRANT ALL ON phyapps_cloud.* TO 'dev'@'localhost';
+GRANT ALL PRIVILEGES ON phyapps_cloud.* TO 'dev'@'localhost';
+FLUSH PRIVILEGES;
 ```
 
 3. Edit `config.py`:
