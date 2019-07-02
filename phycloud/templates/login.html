@@ -2,26 +2,20 @@
 {% set title = "User Login Panel" %}
 {% block container %}
 
-<style type="text/css">
-    .bs{
-        padding: 40px;
-        margin: auto;
-    }
-</style>
-
 <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 
-<div class="col-sm-4 col-sm-offset-4 col-xs-6 col-xs-offset-3">
-    <div class="row form-group input-group">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-        <input type="text" class="form-control" id="inputUsername" placeholder="Username" autocomplete=off autofocus/>
+<div class="mt-3 col-sm-4 offset-sm-4 col-xs-6 offset-xs-3">
+    <div class="row form-group">
+        <label for="username">User name</label>
+        <input type="text" class="form-control" id="inputUsername" placeholder="Enter Username" autocomplete=off autofocus>
     </div>
-    <div class="row form-group input-group">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-        <input type="password" class="form-control" id="inputPassword" placeholder="Password"/>
+    <div class="row form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="inputPassword" placeholder="Enter Password">
     </div>
-    <div class="row form-group checkbox">
-        <label><input type="checkbox" id="check-admin">Login as Administrator</label>
+    <div class="row form-group form-check">
+        <input type="checkbox" class="form-check-input" id="checkAdmin">
+        <label class="form-check-label" for="loginAsAdmin">Login as Administrator</label>
     </div>
     <div class="row form-group">
         <button class="btn btn-success btn-login-login"
@@ -29,7 +23,7 @@
                 data-url="{{ url_for('u_login') }}"
                 data-surl="{{ url_for('users') }}">Login
         </button>
-        <button class="btn btn-info btn-login-signup"
+        <button class="ml-2 btn btn-info btn-login-signup"
                 data-op="signup"
                 data-url="{{ url_for('users') }}"
                 data-surl="{{ url_for('users') }}">Sign Up

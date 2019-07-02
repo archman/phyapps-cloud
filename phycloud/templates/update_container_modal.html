@@ -1,92 +1,58 @@
-<link rel="stylesheet" href={{ url_for("static", filename="css/bootstrap-select.min.css") }}>
-<script src={{ url_for("static", filename="js/bootstrap-select.min.js")}}></script>
-
 <div id="update-container-modal" class="modal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" 
-                    aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Container Configuration</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
-                        <label for="uname" class="control-label col-xs-3">Username</label>
-                        <div class="col-xs-9">
-                            <input type="text" class="form-control" id="uname" readonly>
-                        </div>
+                        <label for="uname" class="control-label">Username</label>
+                        <input type="text" class="form-control" id="uname" readonly>
                     </div>
+                    <div class="form-group">
+                        <label for="cname" class="control-label">Container Name</label>
+                        <input type="text" class="form-control" id="cname" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="cid" class="control-label">Container ID</label>
+                        <input type="text" class="form-control" id="cid" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="notebook_url" class="control-label">Notebook URL</label>
+                        <input type="text" class="form-control" id="notebook_url" readonly>
+                    </div>
+
 
                     <div class="form-group">
-                        <label for="cname" class="control-label col-xs-3">Container Name</label>
-                        <div class="col-xs-9">
-                            <input type="text" class="form-control" id="cname" readonly>
-                        </div>
+                        <label class="control-label">Data Path</label>
+                        <input type="text" id="filepath" class="form-control">
                     </div>
 
-                    <div class="form-group">
-                        <label for="cid" class="control-label col-xs-3">Container ID</label>
-                        <div class="col-xs-9">
-                           <input type="text" class="form-control" id="cid" readonly>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="notebook_url" class="control-label col-xs-3">Notebook URL</label>
-                        <div class="col-xs-9">
-                            <input type="text" class="form-control" id="notebook_url" readonly>
-                        </div>
-                    </div>
-
-                    <div><hr>
-                    </div>
-
-                    <!-- iff user does not have any container linked -->
-                    <div class="form-group">
-                        <div class="col-sm-4">
-                            <label class="control-label">Service</label>
-                            <div class="form-group" style="padding-left:13px;margin-right:10px;">
-                                <select name="clist" class="form-control selectpicker" title="" id="clist">
-                                    <option value="phyapps:1.7-ss" select="selected">phyapps-1.7-ss</option>
-                                    <option value="phyapps:1.7">phyapps-1.7</option>
-                                    <option value="phyapps:1.6-ss" select="selected">phyapps-1.6-ss</option>
-                                    <option value="phyapps:1.6">phyapps-1.6</option>
-                                    <option value="notebook">notebook</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <label class="control-label">Section</label>
-                            <div class="form-group" style="padding-left:13px;margin-right:10px;">
-                                <select name="sections" class="form-control selectpicker" title="" id="csect">
-                                    <option value="LEBT" select="selected">LEBT</option>
-                                    <option value="MEBT">MEBT</option>
-                                    <option value="LS1">LS1</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <label class="control-label">Data Path</label>
-                            <div class="form-group" style="padding-left:13px;margin-right:auto;">
-                                <input type="text" id="filepath" class="form-control"/>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-2 col-sm-offset-8 pull-right">
-                            <button class="btn btn-info form-control btn-start-service"
-                                    data-url="{{ url_for('container', name='#') }}">Start</button>
-                        </div>
-
-                    </div>
-                    <!-- end iff -->
 
                 </form>
             </div>
+
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <!-- iff user does not have any container linked -->
+                <select name="clist" class="form-control" title="Service" id="clist">
+                    <option value="phyapps:1.7-ss" select="selected">phyapps-1.7-ss</option>
+                    <option value="phyapps:1.7">phyapps-1.7</option>
+                    <option value="phyapps:1.6-ss">phyapps-1.6-ss</option>
+                    <option value="phyapps:1.6">phyapps-1.6</option>
+                    <option value="notebook">notebook</option>
+                </select>
+                <select name="sections" class="form-control" title="Section" id="csect">
+                    <option value="LEBT" select="selected">LEBT</option>
+                    <option value="MEBT">MEBT</option>
+                    <option value="LS1">LS1</option>
+                </select>
+                <button type="button" class="btn btn-info btn-start-service" data-url="{{ url_for('container', name='#') }}">Start</button>
+                <!-- end iff -->
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary submit-update-container">Update</button>
             </div>
         </div>
