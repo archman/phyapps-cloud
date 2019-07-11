@@ -58,11 +58,11 @@ class UserLoginAPI(Resource):
             if user.verify_password(password):
                 if as_admin:
                     session['logged_in_admin'] = user.nickname
-                    return {'logged_in_admin': user.nickname}, 200 
+                    return {'logged_in_admin': user.nickname}, 200
                 else:
                     session['logged_in'] = True
                     session['logged_in_user'] = user.name
-                    return {'logged_in_user': user.name}, 200 
+                    return {'logged_in_user': user.name}, 200
             else:
                 abort(401)
         elif op == 'signup':

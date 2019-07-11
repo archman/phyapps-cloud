@@ -134,7 +134,7 @@ def get_container_url(cid, port=8888):
         return all_urls.get('{}/tcp'.format(port))
     except:
         return 'Unknown'
-        
+
 
 def request_json():
     best = request.accept_mimetypes \
@@ -161,7 +161,7 @@ def get_container(cid):
 
 def create_new_container(user, **kws):
     """Create new container.
-    
+
     Parameters
     ----------
     user: User
@@ -229,7 +229,7 @@ def _create_new_container(image, mach, uname, dpath, token, **kws):
                 detach=True, tty=True, **kws)
     except:
         return None, 'Unknown', nb_url, ss_url
-    
+
     nb_url = "http://127.0.0.1:{}".format(NB_PORT)
     ss_url = "http://127.0.0.1:{}".format(SS_PORT)
     return c.id, c.name, nb_url, ss_url

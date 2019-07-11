@@ -20,7 +20,7 @@ from ..models import db
 class ContainerAdminAPI(Resource):
     def __init__(self):
         super(ContainerAdminAPI, self).__init__()
-    
+
     def get(self, name):
         """
         Parameters
@@ -78,7 +78,7 @@ class ContainerAdminAPI(Resource):
         elif op == "resume":
             if c.status == 'paused':
                 return self._resume(c), 200
-        
+
     def _stop(self, c):
         print("{} has just been stopped.".format(c.id))
         c.stop()

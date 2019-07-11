@@ -31,7 +31,6 @@ from .views import UserLoginAPI
 
 from flask import Response
 from flask import render_template
-from flask import redirect
 
 
 @app.route('/')

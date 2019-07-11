@@ -34,6 +34,7 @@ class UserAPI(Resource):
 
     def get(self, name):
         user = User.query.filter(User.name==name).first()
+
         if user is None:
             abort(404)
 
@@ -84,6 +85,7 @@ class UserAPI(Resource):
                 #db.session.commit()
             except:
                 print("stop container")
+            # start container
             user.containers[-1].get_container().start()
             # update proxy rule
             update_proxy(user.name, new_c.notebook_url)
@@ -99,7 +101,7 @@ class UserAPI(Resource):
             except:
                 print("Clean Error")
         db.session.commit()
-        
+
 
     #@auth.login_required
     def delete(self, name):
@@ -148,6 +150,7 @@ class UserListAPI(Resource):
     #@auth.login_required
     def post(self):
         user = self.rp.parse_args()
+
         username = user.get('username')
         password = user.get('password')
 
@@ -165,8 +168,8 @@ class UserListAPI(Resource):
                 admin = Admin.query.filter_by(nickname=admin_name).first()
             else:
                 admin = Admin.query.filter_by(id=1).first()
-                
-            new_u = User(name=username, 
+
+            new_u = User(name=username,
                          admin=admin,
                          description=user.get('description'),
                     )
