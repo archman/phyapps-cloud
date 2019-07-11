@@ -23,9 +23,9 @@
     }
 </style>
 
-<script src="{{ url_for('static', filename='js/nb.js') }}"></script>
+<script src="{{ url_for('static', filename='js/nb.min.js') }}"></script>
 
-<div class="container">
+<div class="container mt-3">
     <div class="row">
         <div class="col-sm-12">
             <div class="page-header">
@@ -83,13 +83,13 @@
                         <td><tt>{{ user.container_name }}</tt></td>
                         {% endif %}
                         {% if user.container_status == 'running' %}
-                        <td><span style="min-width:70px;display:inline-block;" class="label label-success text-uppercase">{{ user.container_status }}</span></td>
+                        <td><span style="min-width:70px;display:inline-block;" class="badge badge-success text-uppercase">{{ user.container_status }}</span></td>
                         {% elif user.container_status == 'exited' %}
-                        <td><span style="min-width:70px;display:inline-block;" class="label label-danger text-uppercase">{{ user.container_status }}</span></td>
+                        <td><span style="min-width:70px;display:inline-block;" class="badge badge-danger text-uppercase">{{ user.container_status }}</span></td>
                         {% elif user.container_status == 'paused' %}
-                        <td><span style="min-width:70px;display:inline-block;" class="label label-warning text-uppercase">{{ user.container_status }}</span></td>
+                        <td><span style="min-width:70px;display:inline-block;" class="badge badge-warning text-uppercase">{{ user.container_status }}</span></td>
                         {% else %}
-                        <td><span style="min-width:70px;display:inline-block;" class="label label-default text-uppercase">{{ user.container_status }}</span></td>
+                        <td><span style="min-width:70px;display:inline-block;" class="badge badge-secondary text-uppercase">{{ user.container_status }}</span></td>
                         {% endif %}
                         <td><tt>{{ user.timestamp }}</tt></td>
                     </tr>

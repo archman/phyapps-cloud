@@ -31,9 +31,9 @@
     .open-create-admin .submit-create-admin, .submit-update-admin{}
 </style>
 
-<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
-<script src="{{ url_for('static', filename='js/user.js') }}"></script>
-<script src="{{ url_for('static', filename='js/nb.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/user.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/nb.min.js') }}"></script>
 
 <script>
 $(function() {
@@ -126,13 +126,13 @@ $(function() {
                         {% endif %}
 
                         {% if user.container_status == 'running' %}
-                        <td><span style="min-width:70px;display:inline-block;" class="label label-success text-uppercase">{{ user.container_status }}</span></td>
+                        <td><span style="min-width:70px;display:inline-block;" class="badge badge-success text-uppercase">{{ user.container_status }}</span></td>
                         {% elif user.container_status == 'exited' %}
-                        <td><span style="min-width:70px;display:inline-block;" class="label label-danger text-uppercase">{{ user.container_status }}</span></td>
+                        <td><span style="min-width:70px;display:inline-block;" class="badge badge-danger text-uppercase">{{ user.container_status }}</span></td>
                         {% elif user.container_status == 'paused' %}
-                        <td><span style="min-width:70px;display:inline-block;" class="label label-warning text-uppercase">{{ user.container_status }}</span></td>
+                        <td><span style="min-width:70px;display:inline-block;" class="badge badge-warning text-uppercase">{{ user.container_status }}</span></td>
                         {% else %}
-                        <td><span style="min-width:70px;display:inline-block;" class="label label-default text-uppercase">{{ user.container_status }}</span></td>
+                        <td><span style="min-width:70px;display:inline-block;" class="badge badge-secondary text-uppercase">{{ user.container_status }}</span></td>
                         {% endif %}
 
                         <td><tt>{{ user.timestamp }}</tt></td>
@@ -191,7 +191,7 @@ $(function() {
                         <td>--</td>
                         {% endif %}
                         <td>{{ container.image }}</td>
-                        <td>{{ container.uptime }}</td>
+                        <td><tt>{{ container.uptime }}</tt></td>
                         <td>{{ container.owner }}</td>
                     </tr>
                     {% endfor %}
@@ -233,7 +233,7 @@ $(function() {
                         </td>
                         <td>{{ admin.nickname }}</td>
                         <td>{{ admin.email }}</td>
-                        <td>{{ admin.timestamp }}</td>
+                        <td><tt>{{ admin.timestamp }}</tt></td>
                     </tr>
                     {% endfor %}
                     <td colspan=4><button class="btn btn-light btn-outline-primary btn-sm btn-create-admin open-create-admin" data-url="{{ url_for('u_admin') }}" data-toggle="modal" data-target="#create-admin-modal" data-title="Create Admin">Create New Admin</button></td>
