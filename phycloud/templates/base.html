@@ -29,10 +29,10 @@
                 <div class="navbar-nav ml-auto">
                     {% if session['logged_in'] %}
                     <a class="nav-item nav-link" href="{{ url_for('user', name=session['logged_in_user']) }}"><span class="badge badge-info">{{ session['logged_in_user'] }}</span></a>
-                    <a class="nav-item nav-link" href='#' data-url="{{ url_for('u_login') }}" class="nav-logout">Logout</a>
+                    <a class="nav-item nav-link nav-logout" href='#' data-url="{{ url_for('u_login') }}">Logout</a>
                     {% elif session['logged_in_admin'] %}
                     <a class="nav-item nav-link" href="{{ url_for('u_admin') }}"><span class="badge badge-danger">{{ session['logged_in_admin'] }}</span></a>
-                    <a class="nav-item nav-link" href='#' data-url="{{ url_for('u_login') }}" class="nav-logout">Logout</a>
+                    <a class="nav-item nav-link nav-logout" href='#' data-url="{{ url_for('u_login') }}">Logout</a>
                     {% else %}
                     <a class="nav-item nav-link" href="{{ url_for('u_login') }}">Login</a>
                     {% endif %}
