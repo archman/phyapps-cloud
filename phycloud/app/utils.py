@@ -37,8 +37,12 @@ else:
 
 
 def utc2local(u_time):
-    l_tz = tzlocal.get_localzone()
-    l_time = u_time.replace(tzinfo=pytz.utc).astimezone(l_tz)
+    utc_now = u_time.replace(tzinfo=pytz.utc)
+    try:
+        l_tz = tzlocal.get_localzone()
+        l_time = utc_now.astimezone(l_tz)
+    except pytz.UnknownTimeZoneError:
+        l_time = utc_now.astimezone()
     return l_time.strftime("%Y-%m-%d %H:%M:%S %Z")
 
 
