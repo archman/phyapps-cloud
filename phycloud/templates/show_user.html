@@ -53,7 +53,7 @@ $(function() {
             <p class="text-uppercase"><strong>{{ k }}</strong></p>
             {% if k == 'notebook_url' and v != 'Unknown' or k == 'uri'  %}
             <p><a href={{ v }}>{{ v }}</a></p>
-            {% elif k == 'container_name' and v != 'Unknown'%}
+            {% elif k == 'container_name' and v != 'Unknown' %}
             <p><a href={{ url_for('container', name=v) }}>{{ v }}</a></p>
             {% else %}
             <p>{{ v }}</p>

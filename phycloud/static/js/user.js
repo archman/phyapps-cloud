@@ -102,7 +102,7 @@ $(function() {
         $(".modal-body #cname").val(cname);
         $(".modal-body #notebook_url").val(curl);
     });
-    
+
 //    $('.selectpicker').on('changed.bs.select', function (e) {
 //            var selected = e.target.value;
 //            console.log(selected);
@@ -116,16 +116,17 @@ $(function() {
         var csect  = $("#csect").val();
         var url    = $(this).data('url');
         var data   = {'image': cimage, 'mach': csect, 'uname': uname,};
-        
+
         if (cimage == 'notebook')
         {
             data['mach'] = '';
         }
-        //console.log("uname:", uname);
-        //console.log("cimage:", cimage);
-        //console.log("section:", csect);
-        //console.log("url:", url);
-        //console.log(JSON.stringify(data));
+        console.log("---Starting Service---")
+        console.log("uname:", uname);
+        console.log("cimage:", cimage);
+        console.log("section:", csect);
+        console.log("url:", url);
+        console.log(JSON.stringify(data));
 
         $.ajax({
             type: "POST",
@@ -155,9 +156,10 @@ $(function() {
         var curl = $(".modal-body #notebook_url").val();
         var cname  = $(".modal-body #cname").val();
         var data = {'container_name': cname}
-        
-        //console.log(JSON.stringify(data));
-        //console.log(url)
+
+        console.log("--- Update container status ---")
+        console.log(JSON.stringify(data));
+        console.log(url)
 
         $.ajax({
             type: "PUT",
