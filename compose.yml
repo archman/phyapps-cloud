@@ -1,0 +1,81 @@
+# CWD=$(pwd)
+# TOKEN="6520fbd2223339e729c99b4f1730f1dd2098b57c3f3d692a37ba6fecc553"
+version: '3.7'
+
+services:
+
+  portainer:
+    image: portainer/portainer
+    command: -H unix:///var/run/docker.sock
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  db:
+    image: mysql:8.0.16
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: E=mc^2
+    ports: # host:container, 3307:3306
+      - target: 3306
+        published: 3307
+        protocol: tcp
+        mode: host
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - target: 8080
+        published: 8090
+        protocol: tcp
+        mode: host
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  chp:
+    image: "jupyterhub/configurable-http-proxy"
+    environment:
+      - CONFIGPROXY_AUTH_TOKEN=6520fbd2223339e729c99b4f1730f1dd2098b57c3f3d692a37ba6fecc553
+    volumes:
+      - /home/tong/Dropbox/FRIB/work/phyapps-cloud/ssl:/ssl
+    command: --default-target http://127.0.0.1:5050 --ip 35.9.126.178 --port 8000 --ssl-cert /ssl/cert.pem --ssl-key /ssl/key.pem --log-level debug
+    networks:
+      hostnet: {}
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  gateway:
+    image: "tonyzhang/phyapps-gateway:latest"
+    environment:
+      - PROXY_TOKEN=6520fbd2223339e729c99b4f1730f1dd2098b57c3f3d692a37ba6fecc553
+      - PROXY_BASE=http://127.0.0.1:8001/api/routes
+      - DPATH=/home/tong/Dropbox/FRIB/work/phyapps-cloud/data
+    networks:
+      hostnet: {}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+volumes:
+  db-data:
+      #name: db-data
+  portainer_data:
+
+networks:
+  hostnet:
+    external: true
+    name: host

@@ -1,0 +1,5 @@
+deploy:
+	docker stack deploy -c compose.yml phyapps_cloud
+
+stop:
+	docker stack rm phyapps_cloud
