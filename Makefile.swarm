@@ -1,4 +1,6 @@
 deploy:
+	SRV_IP=35.9.126.178 \
+	TOKEN=16520fbd2223339e729c99b4f1730f1dd2098b57c3f3d692a37ba6fecc553 \
 	docker stack deploy -c compose.yml phyapps_cloud
 
 stop:
