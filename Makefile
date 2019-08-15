@@ -1,65 +1,61 @@
-.PHONY: deploy stop proxy mnb routes
-
 #
-# !! Change this every time before deployment !!
-# e.g.: TOKEN=$(head -c 30 /dev/urandom | xxd -p)
-# if needs to get routes later, use static string for TOKEN.
+# Makefile for the deployment of phyapps cloud computing platform.
 #
-#TOKEN := $(shell head -c 30 /dev/urandom | xxd -p)
-TOKEN ?= 6520fbd2223339e729c99b4f1730f1dd2098b57c3f3d692a37ba6fecc553
-ETH0  ?= wlp58s0 #enx9cebe85fe8aa
-IPNOW := $(shell ip address show $(ETH0) | \
-		  /bin/grep "\<inet\>" | \
-		  awk '{print $$2}' | \
-		  awk -F'/' '{print $$1}')
+# Author: Tong Zhang <zhangt@frib.msu.edu>
+#
+# Usage:
+# commands in the Terminal (after $)
+# 1. Start deployment
+# $ SRV_IP=10.20.30.40 make deploy
+# 2. Stop deployment
+# $ make stop
+# 3. Clean all data, including database
+# $ make purge
+#
 
-IMAGE_GW := "tonyzhang/phyapps-gateway:latest"
-IMAGE_PROXY := "jupyterhub/configurable-http-proxy"
-DPATH := $(shell pwd)
+# stach name
+STACK_NAME ?= phyapps_cloud
 
-deploy: proxy gateway
-stop: stop-proxy stop-gateway
+# The IP address of workstation as the service provider.
+SRV_IP ?= 192.168.1.1
 
-IP:
-	echo $(IPNOW)
+# secret string for authentication
+TOKEN ?= $(shell head -c 30 /dev/urandom | xxd -p)
 
-proxy:
-	@docker run -d \
-		-e CONFIGPROXY_AUTH_TOKEN=$(TOKEN) \
-		--name=proxy \
-		--net=host \
-		-v $(shell pwd)/ssl:/ssl \
-		$(IMAGE_PROXY) \
-		--log-level debug \
-		--ssl-key /ssl/key.pem \
-		--ssl-cert /ssl/cert.pem \
-		--ip $(IPNOW) \
-		--port 8000 \
-		--default-target http://127.0.0.1:5050
+# MySQL configuration
+# root password
+MYSQL_ROOT_PASSWORD ?= 9db75011
+# database name for phyapps-gateway
+DATABASE_NAME ?= phyapps_cloud
+# database user account name
+DATABASE_USER ?= phyapps_admin
+# DATABASE_USER's password
+DATABASE_PASS ?= ebf39f78
 
-gateway:
-	@docker run -t -d \
-		-e PROXY_TOKEN=$(TOKEN) \
-		-e PROXY_BASE="http://127.0.0.1:8001/api/routes" \
-		-e DPATH=$(DPATH) \
-		-p 5050:5050 \
-		--name=gateway \
-		--net=host \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		$(IMAGE_GW)
+deploy:
+	@printf "TOKEN used: %s\n" $(TOKEN)
+	@MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
+	DATABASE_NAME=${DATABASE_NAME} \
+	DATABASE_USER=${DATABASE_USER} \
+	DATABASE_PASS=${DATABASE_PASS} \
+	TOKEN=${TOKEN} \
+	docker stack deploy -c compose.yml ${STACK_NAME}
+	@printf "Platform address: %s\n" https://${SRV_IP}:8000
+	@printf "Database configuration:\n"
+	@printf "> root password: %s\n" ${MYSQL_ROOT_PASSWORD}
+	@printf "> database name: %s\n" ${DATABASE_NAME}
+	@printf "> database user name: %s\n" ${DATABASE_USER}
+	@printf "> database user pass: %s\n" ${DATABASE_PASS}
 
-stop-proxy:
-	@docker container stop proxy
-	@docker container rm proxy
+stop:
+	@docker stack rm ${STACK_NAME}
 
-stop-gateway:
-	@docker container stop gateway
-	@docker container rm gateway
+purge:
+	@docker volume rm ${STACK_NAME}_db-data ${STACK_NAME}_portainer-data
 
-routes:
-	curl -H "Authorization: token $(TOKEN)" -X GET \
-		http://127.0.0.1:8001/api/routes
+update-images:
+	@docker pull tonyzhang/phyapps-gateway:latest
+	@docker pull tonyzhang/phyapps:nb
+	@docker pull tonyzhang/phyapps:va
 
-update:
-	docker pull tonyzhang/phyapps-gateway
-	docker pull tonyzhang/notebook
+.PHONY: deploy stop purge
