@@ -9,7 +9,7 @@ services:
       - 9000:9000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
+      - portainer-data:/data
     deploy:
       restart_policy:
         condition: on-failure
@@ -20,10 +20,10 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: E=mc^2
-      MYSQL_DATABASE: phyapps_cloud
-      MYSQL_USER: phyapps_admin
-      MYSQL_PASSWORD: fa309026
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_USER=${DATABASE_USER}
+      - MYSQL_PASSWORD=${DATABASE_PASS}
     ports:
       - target: 3306
         published: 3307
@@ -60,9 +60,9 @@ services:
   gateway:
     image: "tonyzhang/phyapps-gateway:latest"
     environment:
-      - DB_NAME=phyapps_cloud
-      - DB_USER=phyapps_admin
-      - DB_PASS=fa309026
+      - DB_NAME=${DATABASE_NAME}
+      - DB_USER=${DATABASE_USER}
+      - DB_PASS=${DATABASE_PASS}
       - PROXY_TOKEN=${TOKEN}
       - PROXY_BASE=http://127.0.0.1:8001/api/routes
       - DPATH=${PWD}/data
@@ -76,7 +76,7 @@ services:
 
 volumes:
   db-data:
-  portainer_data:
+  portainer-data:
 
 networks:
   hostnet:
