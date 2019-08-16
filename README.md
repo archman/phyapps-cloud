@@ -5,7 +5,7 @@ on accelerators.
 
 ## Overview
 
-* After logging onto this platform, each user can create/update their own
+* After login this platform, each user can create/update their own
 Jupyter-Notebook service with physics applications development environment
 included, w/ or w/o virtual accelerator running or not.
 
@@ -13,7 +13,7 @@ included, w/ or w/o virtual accelerator running or not.
 accelerator which the user is manipulating will not affect other users.
 
 * Each user has the flexibility to adjust their own service settings, e.g.,
-start virtual accelerator with different LINAC sections.
+start/stop/pause/resume virtual accelerator with different LINAC sections.
 
 * The Jupyter-Notebook can only be accessed by the user who created.
 
@@ -35,8 +35,6 @@ Python packages.
   where, `<tagname>` could be `nb`, `va`.
 
 * Initialize [Swarm](https://docs.docker.com/engine/swarm/) environment for deployment: `docker swarm init` .
-
-* Database configuration:
 
 ## Deployment
 
@@ -62,6 +60,9 @@ SRV_IP=10.20.30.40 TOKEN=6eec0c438f2e59711a1838d1207e1c make deploy
 ```
 It is recommended to redirect the output to a file, e.g.
 `make deploy 2>&1 | tee log`
+
+6. **Only do once** Database configuration: `https://<SRV_IP>:8000/init`, first initialize the database and then set up
+administrator account.
 
 ## Screenshots
 
