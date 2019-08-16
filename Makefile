@@ -12,6 +12,8 @@
 # 3. Clean all data, including database
 # $ make purge
 #
+# e.g.: SRV_IP=35.22.7.235 make deploy 2>&1 | tee log
+#
 
 # stach name
 STACK_NAME ?= phyapps_cloud
