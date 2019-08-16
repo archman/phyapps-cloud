@@ -28,19 +28,19 @@ Python packages.
 
 ## Prerequisites
 
-* Install [Docker][https://docs.docker.com/install/] & Pull Docker images:
+* Install [Docker](https://docs.docker.com/install/) & Pull Docker images:
 
     `docker pull tonyzhang/phyapps:<tagname>`
 
   where, `<tagname>` could be `nb`, `va`.
 
-* Initialize [Swarm][https://docs.docker.com/engine/swarm/] environment for deployment: `docker swarm init` .
+* Initialize [Swarm](https://docs.docker.com/engine/swarm/) environment for deployment: `docker swarm init` .
 
 * Database configuration:
 
 ## Deployment
 
-1. Clone this repository: ``git clone https://github.com/archman/phyapps-cloud.git``, locate [Makefile.swarm](https://github.com/archman/phyapps-cloud/blob/master/Makefile.swarm).
+1. Clone this repository: ``git clone https://github.com/archman/phyapps-cloud.git``, locate [Makefile](https://github.com/archman/phyapps-cloud/blob/master/Makefile).
 
 2. Set environmental variables in terminal or change in-place:
     * `SRV_IP`: IP address of the workstation as the swarm server
