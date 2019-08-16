@@ -1,50 +1,67 @@
 # phyapps-cloud
 
-Cloud platform for physics applications development.
+Cloud computing platform for software development for physics applications
+on accelerators.
 
 ## Overview
 
-* After loging onto this platform, each user can create/update their own
+* After logging onto this platform, each user can create/update their own
 Jupyter-Notebook service with physics applications development environment
-included.
+included, w/ or w/o virtual accelerator running or not.
 
 * Each user has the private space to work with, e.g., the virtual
-accelerator which the user is manipulating will not affect other users'.
+accelerator which the user is manipulating will not affect other users.
 
 * Each user has the flexibility to adjust their own service settings, e.g.,
-start virtual accelerator with different LINAC sections, or start with
-different versions.
+start virtual accelerator with different LINAC sections.
 
-* The Jupyter-Notebook can only be accessed by the owner.
+* The Jupyter-Notebook can only be accessed by the user who created.
 
-* Within Jupyter-Notebook, user can do anything based on the provisoned
+* Within Jupyter-Notebook, user can do anything based on the provisioned
 Python packages.
 
-* The extensibility to support more serivces.
+* The extensibility to support more services, currently, only supports VA with FRIB LINAC configurations.
 
 * Available services:
-  + phyapps-1.7-ss
-  + phyapps-1.7
-  + phyapps-1.6-ss
-  + phyapps-1.6
-  + notebook
+  + `phyapps-va`
+  + `phyapps-nb`
 
 ## Prerequisites
 
-* Install Docker & Pull Docker images:
-  tagname: `release-1.7-ss`, `release-1.7`, `release-1.6-ss`, `release-1.6`
+* Install [Docker][https://docs.docker.com/install/] & Pull Docker images:
 
-    docker pull tonyzhang/phyapps:tagname
+    `docker pull tonyzhang/phyapps:<tagname>`
 
-* Database configuration: see [this file](https://github.com/archman/phyapps-cloud/blob/master/phycloud/mysql.md).
+  where, `<tagname>` could be `nb`, `va`.
+
+* Initialize [Swarm][https://docs.docker.com/engine/swarm/] environment for deployment: `docker swarm init` .
+
+* Database configuration:
 
 ## Deployment
 
-1. Download the [Makefile](https://github.com/archman/phyapps-cloud/blob/master/Makefile) of this repo.
-2. Set `ETH0` to be the name of your network interface.
-2. Type `make deploy` to deploy, or `ETH0=eth0 make deploy`.
-3. Type `make stop` to stop.
-4. The URL should be `https://<your-ip-address>:8000`
+1. Clone this repository: ``git clone https://github.com/archman/phyapps-cloud.git``, locate [Makefile.swarm](https://github.com/archman/phyapps-cloud/blob/master/Makefile.swarm).
+
+2. Set environmental variables in terminal or change in-place:
+    * `SRV_IP`: IP address of the workstation as the swarm server
+    * `TOKEN`: secret string for authentication
+    * `MYSQL_ROOT_PASSWORD`: root password for MySQL service
+    * `DATABASE_NAME`: database name for phyapps-gateway service
+    * `DATABASE_USER`: database user account
+    * `DATABASE_PASS`: `DATABASE_USER`'s password
+
+3. Type `make deploy` to deploy.
+
+4. Type `make stop` to stop.
+
+5. The URL should be `https://<SRV_IP>:8000`
+
+Here is an example to deploy the `phyapps_cloud` stack on the workstation with serving IP of `10.20.30.40`, with default configurations of MySQL service.
+```shell
+SRV_IP=10.20.30.40 TOKEN=6eec0c438f2e59711a1838d1207e1c make deploy
+```
+It is recommended to redirect the output to a file, e.g.
+`make deploy 2>&1 | tee log`
 
 ## Screenshots
 
